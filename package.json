@@ -1,7 +1,7 @@
 {
-  "name": "viridium-design",
+  "name": "portfolios",
   "version": "0.1.0",
-  "homepage": "https://timwangnz.github.io/viridium-design",
+  "homepage": "https://viridiumdesign.github.io/portfolios/",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.9.3",
