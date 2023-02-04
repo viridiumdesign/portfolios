@@ -1,0 +1,12 @@
+{
+  "files": {
+    "main.css": "/viridium-design/static/css/main.9ca29962.css",
+    "main.js": "/viridium-design/static/js/main.ba057afa.js",
+    "static/js/27.0f687243.chunk.js": "/viridium-design/static/js/27.0f687243.chunk.js",
+    "index.html": "/viridium-design/index.html"
+  },
+  "entrypoints": [
+    "static/css/main.9ca29962.css",
+    "static/js/main.ba057afa.js"
+  ]
+}
