@@ -1,0 +1,101 @@
+.security-app {
+    flex-wrap: nowrap;
+    overflow-x: hidden;
+}
+
+.security-app a:hover {
+    color: rgb(60, 66, 249);
+    font-size: medium;
+}
+.security-app .v-security-form-container {
+    width: min(33vw, 600px);
+    min-width: 400px;
+    margin: min(100px, 50vh) auto 0.5em auto;
+}
+
+.security-app .v-notification-meta {
+    padding: 1em;
+}
+
+.security-app .v-button {
+    display: inline-block;
+    padding: 5px;
+    margin: 12px;
+}
+
+.security-app .v-buttons {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.security-app .v-form {
+    background-color: #F1F1F1;
+    padding: 30px;
+    box-shadow: none;
+    border-radius: 10px;
+}
+
+.security-app .v-signout-main {
+    margin: auto;
+    width: 60%;
+    margin-top:2em;
+    font-size: 3em;
+    padding: 4em;
+    min-height: 10em;
+    background-color: rgb(251, 251, 251);
+    border-radius: 1em;
+}
+
+.security-app .v-header {
+    background-color: inherit;
+}
+
+.security-app .v-title {
+    font-weight: bold;
+    font-size: 30px;
+    padding-left: 30px;
+}
+
+.security-app #sign-in-submit {
+    width: 100%;
+    background-color: #0042A5;
+    color: #DDDDDD;
+    border-radius: 50px;
+}
+
+.security-app .form-control {
+    width: 100%;
+    background-color: #D9D9D9;
+    color: #1A1A1A;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.security-app #sign-in-remember-me {
+    vertical-align: middle;
+    font-size: 14px;
+    margin-left: 3px;
+}
+
+.security-app #sign-in-remember-me input {
+    background-color: #0042A5;
+}
+
+.security-app #sign-in-remember-me label {
+    margin-top: 3px;
+}
+
+.security-app #create-account {
+    padding: 20px;
+    text-align: center;
+    width: 400px;
+}
+
+.security-app #create-account .nav-link{
+    display: inline;
+    margin-left: 0px;
+}
+
+.security-app .v-footer {
+    background-color: inherit;
+}

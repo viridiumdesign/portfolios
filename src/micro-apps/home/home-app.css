@@ -1,0 +1,144 @@
+.home-app .home-content {
+    padding: 1rem;
+    font-size: 28px;
+}
+.home-app .home-page {
+    padding: 0.5rem;
+    height: 95vh;
+}
+.home-app .summary {
+    border: 1px solid whitesmoke;
+    padding: 0.5rem;
+    height: 300px;
+}
+.home-app .about {
+    border: 1px solid whitesmoke;
+    padding: 0.5rem;
+    height: 300px;
+}
+.home-app .v-text {
+    font-size: 22px;
+}
+.home-app .toast {
+    width: 100%;
+}
+
+.home-app .v-container {
+    width: 80vw;
+    margin: 0px auto 0px auto;
+    border-width: 1px;
+}
+
+.home-app .v-header {
+    padding: 0.8em;
+}
+
+.home-app .v-body {
+    padding: 2em 0.2;
+}
+.divider {
+    height: 1em;
+}
+.home-app .v-button-submit {
+    width:100%;
+    padding: 0.2em;
+    border-radius: 2em;
+    font-size: x-large;
+}
+
+
+.v-title {
+    font-size: 24px;
+    background: none;
+    margin: 0px;
+    padding: 0px;
+}
+.intro {
+    background-color: rgb(255, 255, 255);
+    padding: 0px 0px 20px 0px;
+}
+.home-app .headline {
+    font-size: 54px;
+    font-weight: 700;
+    color:rgb(47, 96, 209);
+    padding: 20px 0px;
+    line-height: 54px;
+    margin-top: 20px;
+}
+
+.features {
+    padding: 0px 12px;
+    position: absolute;
+    top:100hv;
+    width: 100%;
+}
+
+.home-app .features .col {
+    background-color: rgb(228, 248, 244);
+    padding: 10px;
+    overflow: hidden;
+    border: 2px solid rgb(207, 235, 207);
+    border-radius: 4px;
+    color: rgb(3, 125, 52);
+    margin: 0px 4px;
+    position: relative;
+}
+.green-img {
+    width:280px;
+    height: 280px;
+    margin:0px auto;
+    opacity: 0.6;
+    border-radius: 30em;
+}
+.dog {padding:4em 10em;}
+.v-footer-welcome {
+    width: 100%;
+    display: flex;
+    flex-grow: inherit;
+    flex-direction: row;
+    margin-left:10em
+}
+.step1 {
+    height: 100px;
+    width: 100px;
+    border-radius: 100px;
+    background-color: rgb(100, 178, 237, 0.2);
+    bottom: 0px;
+    position: absolute;
+    flex: 10% 1;
+}
+
+.step2 {
+    height: 200px;
+    width: 200px;
+    border-radius: 200px;
+    background-color: rgb(54, 134, 172, 0.2);
+    bottom: 0px;
+    position: absolute;
+    flex: 20% 2;
+
+}
+
+.step3 {
+    height: 300px;
+    width: 300px;
+    background-color: rgb(12, 130, 194, 0.2);
+    border-radius: 300px;
+    bottom: 0px;
+    position: absolute;
+    flex: 30% 3;
+}
+
+.step4 {
+    height: 300px;
+    width: 300px;
+    bottom: 0px;
+    position: absolute;
+    border-top: 5px solid rgb(12, 130, 194, 0.2);
+    border-right: 5px solid rgb(12, 130, 194, 0.2);
+    flex: 40% 4;
+}
+
+.v-title-1 {
+    color:rgb(80, 210, 250)
+}

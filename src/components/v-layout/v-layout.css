@@ -1,0 +1,149 @@
+.v-layout {
+    --v-body-nav-width:20%;
+    --v-body-main-width:80%;
+    --v-body-main-padding: 0.5em;
+    --v-body-nav-padding: 0.5em;
+    --v-layout-footer-bg: rgba(240, 238, 238, 0.5);
+    --v-layout-footer-color: rgb(144, 144, 144);
+    --v-app-header-bg:rgb(245, 245, 245);
+    --v-notifications-bg:rgba(255, 0, 0, 0.802);
+}
+
+.v-layout .navbar-brand {
+    margin-left: 0.4em;
+}
+
+.v-layout .nav-link {
+    margin-right: 1.0em;
+    margin-left: -1em;
+}
+
+.v-layout .v-layout-header-end {
+    margin-right: 2em;
+}
+
+.v-layout .v-body-nav {
+    padding: var(--v-body-nav-padding);
+    flex: var(--v-body-nav-width);
+    max-width: 300px;
+    height: calc(100vh - 110px);
+}
+
+.v-layout .v-body-nav a {
+    text-decoration: none;
+}
+
+.v-layout .v-body-main {
+    flex: var(--v-body-main-width);
+    padding: var(--v-body-main-padding);
+    overflow: scroll;
+}
+
+.v-layout .v-logo {
+    height: 36px;
+    width: 36px;
+    margin-right: 4px;
+    margin-top: -8px;
+}
+
+.v-layout .nav-icon {
+    width: 1.4rem;
+    margin-right: 4px;
+}
+
+.v-layout .search-input {
+    min-width: 24rem;
+    border: 1px solid lightblue;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.2rem;
+}
+
+.v-layout .list-group-item {
+    border: 0px;
+    padding: 2px;
+}
+
+.v-layout ul {
+    padding-inline-start: 4px;
+}
+.v-layout .v-app-header {
+    background-color: var(--v-app-header-bg);
+}
+
+.v-layout .v-page-header {
+    width: 100%;
+}
+
+.v-layout .dropdown-menu {
+    left : -20px;
+    top: 2.5em;
+    border-radius: 0px 0px 6px 6px;
+}
+
+.v-layout .v-page-body {
+    width: 100%;
+}
+
+.v-layout .v-page-footer {
+    padding: 12px;
+    background-color: var(--v-layout-footer-bg);
+    position: fixed;
+    bottom: 0;
+    font-size: small;
+    color: var(--v-layoyt-footer-color);
+    width: 100%;
+}
+
+.v-layout .notifications-icon {
+    background-color: var(--v-notifications-bg);
+    border-radius: 6px;
+    color :white;
+    padding:2px;
+    margin-left: .2rem;
+    position: relative;
+    top: 0px;
+    left:-10px;
+}
+.v-layout .actions-menu {
+    margin-right: 1em;
+    --bs-nav-link-color: black;
+}
+
+.v-layout .v-body-nav .toast {
+    margin-bottom: 1rem;
+}
+
+.v-layout .offcanvas {
+    width:30%;
+}
+
+.v-layout .offcanvas .form-help-text {
+    padding: 1.0rem;
+    color: rgb(151, 151, 151);
+    background-color: rgb(245, 245, 245);
+    margin: 0px 0px 1.0rem 0px;
+}
+
+.v-layout .offcanvas .form-actions {
+    padding: 0.5em;
+    background-color: rgb(236, 236, 236);
+}
+
+.v-layout .offcanvas .form-action {
+    display: flex;
+    margin-left: auto;
+}
+
+
+.offcanvas-header button {
+    min-width: 3em;   
+}
+
+.v-title-1 {
+    color:aquamarine;
+    font-weight: bold;
+}
+.v-title-2 {
+    color:rgb(252, 252, 252);
+    font-weight: bold;
+}

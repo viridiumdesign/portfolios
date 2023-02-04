@@ -1,0 +1,110 @@
+{
+    "users": [
+        {
+            "id": "1",
+            "username": "anpwang@gmail.com",
+            "password": "welcome.1234",
+            "roles": [
+                "admin",
+                "developer"
+            ],
+            "firstName": "Tim",
+            "lastName": "Wang",
+            "title": "Engineer",
+            "avatar": "./anping.png",
+            "gender": "m",
+            "email": "anpwang@gmail.com",
+            "phone": "650-576-2123"
+        },
+        {
+            "id": "2",
+            "username": "niraj.deo@viridium.ai",
+            "password": "welcome",
+            "roles": [
+                "user"
+            ],
+            "firstName": "Niraj",
+            "lastName": "Deo",
+            "title": "CEO",
+            "avatar": "./niraj.png",
+            "gender": "m",
+            "email": "niraj.deo@viridium.ai",
+            "phone": "412-576-2123"
+        },
+        {
+            "id": "3",
+            "username": "sarah.wang@viridium.ai",
+            "password": "welcome",
+            "roles": [
+                "developer"
+            ],
+            "firstName": "Sarah",
+            "lastName": "Wang",
+            "title": "Data Analyst",
+            "avatar": "./sarah.png",
+            "gender": "f",
+            "email": "sarah.wang@viridium.ai",
+            "phone": "925-576-2123"
+        }
+    ],
+    "roles": [
+        {
+            "id": "1",
+            "name": "admin"
+        },
+        {
+            "id": "2",
+            "name": "admin"
+        },
+        {
+            "id": "3",
+            "name": "QA"
+        },
+        {
+            "id": "4",
+            "name": "developer"
+        }
+    ],
+    "permissions": [
+        {
+            "id": "1",
+            "role": "admin",
+            "resources": [
+                "*"
+            ],
+            "actions": [
+                "*"
+            ]
+        },
+        {
+            "id": "2",
+            "role": "user",
+            "resources": [
+                "*"
+            ],
+            "actions": [
+                "read"
+            ]
+        },
+        {
+            "id": "4",
+            "role": "QA",
+            "resources": [
+                "*"
+            ],
+            "actions": [
+                "*"
+            ]
+        },
+        {
+            "id": "3",
+            "role": "developer",
+            "resources": [
+                "*"
+            ],
+            "actions": [
+                "*"
+            ]
+        }
+    ]
+}
