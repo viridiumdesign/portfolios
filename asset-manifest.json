@@ -1,12 +1,12 @@
 {
   "files": {
-    "main.css": "/viridium-design/static/css/main.9ca29962.css",
-    "main.js": "/viridium-design/static/js/main.ba057afa.js",
-    "static/js/27.0f687243.chunk.js": "/viridium-design/static/js/27.0f687243.chunk.js",
-    "index.html": "/viridium-design/index.html"
+    "main.css": "/protfolios/static/css/main.9ca29962.css",
+    "main.js": "/protfolios/static/js/main.007cc1b6.js",
+    "static/js/27.bf87cdb9.chunk.js": "/protfolios/static/js/27.bf87cdb9.chunk.js",
+    "index.html": "/protfolios/index.html"
   },
   "entrypoints": [
     "static/css/main.9ca29962.css",
-    "static/js/main.ba057afa.js"
+    "static/js/main.007cc1b6.js"
   ]
 }
