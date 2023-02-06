@@ -1,5 +1,5 @@
 
-import labels from "../common/resources/labels.json";
+import labels from "../v-resources/labels.json";
 
 export class StringUtils {
 

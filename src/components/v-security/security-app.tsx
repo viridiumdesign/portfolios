@@ -2,12 +2,12 @@ import { useState } from "react";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import { Route, useNavigate, useSearchParams } from "react-router-dom";
 
-import { LayoutPage, v_link, v_map } from "../../components/v-layout/v-layout";
-import { securityManager, UserContextType, UserContext, LoginObject } from "../../common/security/v-security-manager";
+import { LayoutPage, v_link, v_map } from "../v-layout/v-layout";
+import { securityManager, UserContextType, UserContext, LoginObject } from "./v-security-manager";
 import './security-app.css';
 import { NotificationView } from "./notifications";
-import { MicroApp } from "../v-app";
-import { EntityDetails, FieldDef } from "../../components/v-entity/entity-form";
+import { MicroApp } from "../v-common/v-app";
+import { EntityDetails, FieldDef } from "../v-entity/entity-form";
 
 class SecurityApp extends MicroApp {
     public getName = () => {
@@ -449,7 +449,7 @@ export const ProfileManager = (props: any) => {
             FieldDef.new("lastName"),
             FieldDef.new("phone"),
             FieldDef.new("email"),
-            FieldDef.new("gender").formatter((value: any) => {
+            FieldDef.new("gender").useFormatter((value: any) => {
                 if (value === "m") {
                     return "Male"
                 } else {

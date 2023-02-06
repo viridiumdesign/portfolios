@@ -4,7 +4,7 @@ import { ViridiumOffcanvas } from '../v-layout/v-layout';
 
 import { Entity, EntityManager } from './entity-model';
 import { EntityForm, EntityList } from './entity-form';
-import { StringUtils } from '../../utils/v-string-utils';
+import { StringUtils } from '../v-utils/v-string-utils';
 
 interface EntityPageProps {
     manager: EntityManager;
@@ -45,7 +45,7 @@ export class EntityPage extends Component<EntityPageProps, EntityPageState> {
         } else {
             this.props.manager.update(formData);
         }
-        this.setState({ entities: this.props.manager.get() });
+        this.setState({ entities: this.props.manager.get(), showForm:false });
     }
     onDelete = (entity: any) => {
         if (entity) {
@@ -64,16 +64,16 @@ export class EntityPage extends Component<EntityPageProps, EntityPageState> {
         }
     }
     onEdit = (entity: any) => {
-        this.setState({ entity: entity, showForm: true, editorMode: "edit" });
+        this.setState({ entity: entity, showForm: true, editorMode: "update" });
         this.forceUpdate();
     }
     onCreate = () => {
-        this.setState({ entity: this.props.manager.new(), showForm: true, editorMode: "create" });
+        this.setState({ entity: this.props.manager.defaultEntity(), showForm: true, editorMode: "create" });
         this.forceUpdate();
     }
     render = () => {
         let manager = this.props.manager;
-        let canEdit = manager.getPermissions().includes("edit");
+        let canEdit = manager.getPermissions().includes("update");
         let canDelete = manager.getPermissions().includes("delete");
         let canSelect = manager.getPermissions().includes("select");
         let entityName = StringUtils.t(this.props.manager.name())?.toLocaleLowerCase();
@@ -104,7 +104,7 @@ export class EntityPage extends Component<EntityPageProps, EntityPageState> {
                     this.props.readonly ? "" : <span className="v-link" onClick={this.onCreate}>Add a {entityName}</span>
                 }
                 <ViridiumOffcanvas showTitle={false} onHide={this.hideForm}
-                    showForm={{ show: this.state.showForm, mode: this.state.editorMode }}
+                    showForm={this.state.showForm}
                     title={"Add a " + entityName} >
                     <EntityForm title="" onSubmit={this.onSubmit} entity={this.state.entity}
                         fieldDefs={this.props.manager.getFieldDefs} mode={this.state.editorMode} />

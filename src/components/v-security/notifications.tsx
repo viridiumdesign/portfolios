@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Toast, Row, Col } from "react-bootstrap";
-import { LayoutPage } from "../../components/v-layout/v-layout";
+import { LayoutPage } from "../v-layout/v-layout";
 
 import { securityApp } from "./security-app";
 import { LoremIpsum } from "lorem-ipsum";

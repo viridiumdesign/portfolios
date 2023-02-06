@@ -1,39 +1,10 @@
 import { PureComponent } from "react";
-import { securityManager } from "../../common/security/v-security-manager";
-import { StringUtils } from "../../utils/v-string-utils";
+import { StringUtils } from "../v-utils/v-string-utils";
 import { FieldDef, EntityForm } from "../v-entity/entity-form";
 
-import { Entity, EntityManager, metadataManager } from "../v-entity/entity-model";
+import { BaseEntity, EntityManager, Gender, metadataManager } from "../v-entity/entity-model";
 
-export class BaseEntity implements Entity {
-    id: string;
-    name: string;
-    createdAt: Date;
-    createdBy: string;
-    constructor() {
-        this.id = StringUtils.guid();
-        this.name = "";
-        this.createdAt = new Date();
-        this.createdBy = securityManager.getUserName();
-    }
 
-    clone = (c: any): any => {
-        Object.assign(this, c);
-        this.id = StringUtils.guid();
-        this.createdAt = new Date();
-        this.createdBy = securityManager.getUserName();
-        return this;
-    }
-    assign = (c: any): any => {
-        Object.assign(this, c);
-        return this;
-    }
-}
-enum Gender {
-    MALE="Male",
-    FEMALE="Female",
-    OTHER="Other"
-}
 export class Person extends BaseEntity {
     username: string = "";
     firstName: string = "";
@@ -45,7 +16,6 @@ export class Person extends BaseEntity {
     gender: Gender = Gender.OTHER;
     dateOfBirth?: Date;
 }
-
 export class Shipping extends BaseEntity {
 
 
@@ -132,13 +102,16 @@ export class AddressManager extends EntityManager {
 }
 
 type AddressProps = {
-    mode: "create" | "edit",
+    id ? : string;
+    mode: "create" | "update",
     address?: Address,
-    title?: string
+    title?: string,
+    onChange?: Function,
+    onSubmit?: Function
 }
 
 type AddressState = {
-    mode: "create" | "edit",
+    mode: "create" | "update",
     address?: Address
 }
 
@@ -146,30 +119,36 @@ export class AddressForm extends PureComponent<AddressProps, AddressState> {
     manager = new AddressManager();
     constructor(props: AddressProps) {
         super(props);
-        this.state = { mode: props.mode, address: props.address };
+        let address = props.address ? props.address : new Address();
+        this.state = { mode: props.mode, address: address };
     }
 
     onChange = (evt: any) => {
-        const selectedSymbol = evt.value;
-
+        if(this.props.onChange) {
+            this.props.onChange(evt);
+        }
     }
 
     render = () => {
-        return <div className="v-address-form" >
+        return <div id={this.props.id} className="v-address-form" >
             <EntityForm title={this.props.title ? this.props.title : "Address"}
-                mode="create" fieldDefs={this.manager.getFieldDefs} />
+                onChange = {this.props.onChange}
+                onSubmit = {this.props.onSubmit}
+                mode={this.props.mode} 
+                entity={this.state.address}
+                fieldDefs={this.manager.getFieldDefs} />
         </div>
     };
 }
 
 type CreditCardProps = {
-    mode: "create" | "edit",
+    mode: "create" | "update",
     card?: CreditCard
     title?: string
 }
 
 type CreditCardState = {
-    mode: "create" | "edit",
+    mode: "create" | "update",
     card?: CreditCard
 }
 
@@ -195,8 +174,8 @@ export class CreditCardForm extends PureComponent<CreditCardProps, CreditCardSta
 
 type BusinessObjectProps = {
     id : string;
-    mode: "create" | "edit",
-    object?: BaseEntity,
+    mode: "create" | "update",
+    entity?: BaseEntity,
     fieldDefs?: Array<FieldDef>
     title?: string,
     objectType: string,
@@ -205,18 +184,20 @@ type BusinessObjectProps = {
 }
 
 type BusinessObjectState = {
-    mode: "create" | "edit",
-    object?: BaseEntity
+    mode: "create" | "update",
+    entity?: BaseEntity
 }
 
 export class BusinessObjectForm extends PureComponent<BusinessObjectProps, BusinessObjectState> {
     constructor(props: BusinessObjectProps) {
         super(props);
-        this.state = { mode: props.mode, object: props.object };
+        let entity = props.entity ? props.entity : new BaseEntity();
+        this.state = { mode: props.mode, entity: entity };
     }
 
     getFieldDefs = () => {
-        return this.props.fieldDefs ? this.props.fieldDefs : EntityManager.entityToDefs(this.props.object) ;
+        return this.props.fieldDefs ? this.props.fieldDefs : 
+                EntityManager.entityToDefs(this.props.entity) ;
     }
 
     onChange = (newValue: any) => {
@@ -228,9 +209,13 @@ export class BusinessObjectForm extends PureComponent<BusinessObjectProps, Busin
     }
 
     render = () => {
-        return <div id={this.props.id} className={`v-${this.props.objectType.toLocaleLowerCase()}-form`} >
-            <EntityForm title={this.props.title ? this.props.title : StringUtils.t(this.props.objectType)}
-                onChange={this.onChange} mode={this.props.mode} fieldDefs={this.getFieldDefs} />
+        return  <div id={this.props.id} className={`v-business-object v-${this.props.objectType.toLocaleLowerCase()}-form`} >
+            <EntityForm title={this.props.title ? 
+                this.props.title : StringUtils.t(this.props.objectType)}
+                entity = {this.state.entity}
+                onChange={this.onChange} 
+                mode={this.props.mode} 
+                fieldDefs={this.getFieldDefs} />
         </div>
     };
 }

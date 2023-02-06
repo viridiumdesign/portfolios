@@ -1,4 +1,4 @@
-import { StringUtils } from '../utils/v-string-utils';
+import { StringUtils } from '../v-utils/v-string-utils';
 
 export interface IMicroApp {
     getRouteItems(): IRouteItem[];

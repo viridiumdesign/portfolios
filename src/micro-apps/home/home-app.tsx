@@ -1,8 +1,8 @@
 import { Route } from "react-router-dom";
-import { MicroApp, RouteItem } from "../../common/v-app";
 import { WelcomePage } from "./welcome";
 import './home-app.css';
 import { v_map } from "../../components/v-layout/v-layout";
+import { MicroApp, RouteItem } from "../../components/v-common/v-app";
 
 class HomeApp extends MicroApp {
   getTitle = (): string => {

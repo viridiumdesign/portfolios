@@ -5,9 +5,7 @@ import { LayoutPage } from '../../components/v-layout/v-layout';
 import { homeApp } from './home-app';
 
 export const WelcomePage = (props: any) => {
-  homeApp.headerOption = () => {
-    return { visible: false }
-  }
+
   return (
     <LayoutPage microApp={homeApp}>
       <div className="home-page v-container">

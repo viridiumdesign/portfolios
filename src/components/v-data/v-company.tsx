@@ -1,6 +1,6 @@
 
 import { Component } from "react";
-import { StringUtils } from "../../utils/v-string-utils";
+import { StringUtils } from "../v-utils/v-string-utils";
 import { StandardProps } from "../v-common/v-types";
 import { FieldDef } from "../v-entity/entity-form";
 import { metadataManager } from "../v-entity/entity-model";

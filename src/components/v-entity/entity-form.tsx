@@ -3,10 +3,11 @@ import { Form, Button, Row, Table, Col, Toast } from 'react-bootstrap';
 
 import './entity-form.css';
 
-import { TitleProp, Action } from '../../common/v-app';
-import { StringUtils } from '../../utils/v-string-utils';
+import { TitleProp, Action } from '../v-common/v-app';
+import { StringUtils } from '../v-utils/v-string-utils';
 import { Entity, EntityManager, Formatter, Money, ValidationMessage, Validator } from './entity-model';
 import { SelectCompany } from '../v-data/v-company';
+import { FeedbackProps } from 'react-bootstrap/esm/Feedback';
 export class FieldValue {
     value: any = undefined;
     definition?: FieldDef;
@@ -39,19 +40,19 @@ export enum Visibility {
 export class FieldDef {
     name: string = ''; //field name, related to object attribute, such as firstName
     type: ValueType = ValueType.STRING; //type, 
-    _formatter?: Formatter | Function; //used to format the value for viewing, entity list and details 
+    formatter?: Formatter | Function; //used to format the value for viewing, entity list and details 
     placeHolder?: string = undefined; //used to show for view, getLabel should be used if not specified
-    labelMode: string = "placeholder";
+    labelMode: string = "label placeholder";
     readonly?: boolean = false;
     updatable?: boolean;
     required: boolean = false;
     visibility: Visibility = Visibility.ALL;
-    _validator?: Validator | Function; //called to validate a field if specified
+    validator?: Validator | Function; //called to validate a field if specified
     selectOptions?: Function | Array<SelectOption>; //if specified, means, the value will be one of the list
     //default?: ValueType; //default value from the options
     label?: string;
     labels?: string[] = [];//for multi value such as SET
-    _defaultValue?: number | Date | string;
+    defaultValue?: number | Date | string | boolean | Array<any>;
     //
     //return value with this definition
     public value = (value: any) => {
@@ -65,11 +66,11 @@ export class FieldDef {
             && this.type !== ValueType.PASSWORD
     }
     public getDisplayValue = (value: any) => {
-        if (this._formatter) {
-            if (this._formatter instanceof Function) {
-                return this._formatter(value)
-            } else if (this._formatter.format) {
-                return this._formatter.format(value);
+        if (this.formatter) {
+            if (this.formatter instanceof Function) {
+                return this.formatter(value)
+            } else if (this.formatter.format) {
+                return this.formatter.format(value);
             }
         } else {
             return value;
@@ -111,18 +112,18 @@ export class FieldDef {
         }
     }
 
-    formatter = (f: Formatter | Function | undefined) => {
-        this._formatter = f;
+    useFormatter = (f: Formatter | Function | undefined) => {
+        this.formatter = f;
         return this;
     }
 
-    validator = (v: Validator | Function | undefined) => {
-        this._validator = v;
+    useValidator = (v: Validator | Function | undefined) => {
+        this.validator = v;
         return this;
     }
 
     validate(value: any, entity: any): ValidationMessage | undefined {
-        let validator = this._validator;
+        let validator = this.validator;
         if (!validator) {
             return undefined;
         } else if (validator instanceof Function) {
@@ -139,11 +140,9 @@ export class FieldDef {
         return entity[this.name];
     }
 
-    set defaultValue(value: Date | number | string | undefined) {
-        this._defaultValue = value;
-    }
-    get defaultValue(): Date | number | string | undefined {
-        return this._defaultValue;
+    useDefault(value: Date | number | string | boolean | Array<any> | undefined) {
+        this.defaultValue = value;
+        return this;
     }
 
     //set attributes
@@ -151,20 +150,26 @@ export class FieldDef {
         (this as any)[key] = value;
         return this;
     }
+
+    public optional = () => {
+        this.required = false;
+        return this;
+    }
+
     public static new(name: string, type: ValueType | undefined = undefined,
+        required: boolean = true,
         placeHolder: string | undefined = undefined,
         readonly = false,
-        validator: Function | undefined = undefined,
-        required: boolean = false) {
+        validator: Function | undefined = undefined) {
         let field = new FieldDef();
         field.name = name;
         field.required = required;
         field.type = type ? type : ValueType.STRING;
         field.placeHolder = placeHolder;
         field.readonly = readonly;
-        field._validator = validator;
+        field.validator = validator;
         if (type === ValueType.MONEY) {
-            field._formatter = Money
+            field.formatter = Money
         }
         return field;
     }
@@ -187,7 +192,6 @@ export class FieldDef {
         field.name = name;
         field.type = ValueType.DATE;
         let dv = defaultValue ? defaultValue : new Date();
-
         field.placeHolder = dv.toISOString().slice(0, 10);
         field.defaultValue = field.placeHolder;
         return field;
@@ -221,6 +225,7 @@ export class Title extends Component<TitleProp> {
         )
     }
 }
+
 export type FormFieldOption = {
     name: string;
     value: string;
@@ -229,26 +234,14 @@ export type FormFieldOption = {
 export interface FormFieldProp {
     id?: any;
     def: FieldDef,
-    entity: any,
+    entity: Entity,
     onInput: any,
-    options?: Function | Array<FormFieldOption>
+    options?: Function | Array<FormFieldOption>,
+    labelPosition?: string
 }
 export interface FormFieldState {
     value: any,
     msg?: ValidationMessage
-}
-interface FormProp {
-    id?: string,
-    title?: string,
-    entity?: any;
-    mode?: string;
-    fieldDefs?: Function;
-    onSubmit?: Function;
-    onChange?: Function;
-}
-interface FormPropState {
-    hasError: boolean;
-    entity: any
 }
 export class TextField extends PureComponent<FormFieldProp, FormFieldState>{
     _def: FieldDef;
@@ -261,11 +254,9 @@ export class TextField extends PureComponent<FormFieldProp, FormFieldState>{
         let defaultV = this._def.getValue(this._entity);
         this.state = { value: defaultV, msg: undefined };
     }
-
     componentDidMount(): void {
 
     }
-
     onChange = (evt: any) => {
         let v = evt.target.value;
         let def = this._def;
@@ -278,24 +269,34 @@ export class TextField extends PureComponent<FormFieldProp, FormFieldState>{
                 }
             }
         }
-        this.setState({ value: v ? v:"", msg: msg });
+        this.setState({ value: v ? v : "", msg: msg });
         this.props.onInput({ def: def, value: v, hasError: msg !== undefined, errorMsg: msg, ...evt });
     }
+
     render() {
         let def = this._def;
         let msg = this.state.msg;
         return (
-            <Form.Group className="mb-3" controlId={this._entity.id}>
-                {
-                    def.labelMode.includes("label") ? <Form.Label>{def.getLabel()}</Form.Label> : ""
-                }
-                {
-                    <Form.Control type={def.getUIType()} value={this.state.value} onInput={this.onChange} placeholder={def.getPlaceHolder()} />
-                }
-                {
-                    msg ? <div className={"v-message-" + msg.severity}>{msg.message}</div> : ""
-                }
-            </Form.Group>
+            <>
+                <Form.Group className="v-form-field" controlId={this._entity.id}>
+                    {
+                        def.labelMode.includes("label") ? <Form.Label className="v-form-label">{def.getLabel()}</Form.Label> : ""
+                    }
+                    {
+                        <div className='v-input-container'>
+                            <Form.Control className="v-input" type={def.getUIType()}
+                                value={this.state.value}
+                                onInput={this.onChange}
+                                placeholder={def.getPlaceHolder()}
+                            />
+                            {
+                                msg ? <div className={"v-message-" + msg.severity}>{msg.message}</div> : ""
+                            }
+                        </div>
+                    }
+                </Form.Group>
+
+            </>
         )
     }
 }
@@ -313,17 +314,16 @@ export class CheckField extends Component<FormFieldProp, FormFieldState>{
     }
     render() {
         let def = this.props.def;
-        let msg = this.state.msg;
         return (
-            <Form.Group className="mb-3" controlId={this.id}>
+            <Form.Group className="v-form-field" controlId={this.id}>
                 {
-                    def.labelMode.includes("label") ? <Form.Label>{def.getLabel()}</Form.Label> : ""
+                    def.labelMode.includes("label") ?
+                        <Form.Label className="v-form-label">{def.getLabel()}</Form.Label> : ""
                 }
-                <Form.Check name={def.name} type={"checkbox"} onChange={this.onChange} checked={this.state.value}
-                    label={def.getLabel()} />
-                {
-                    msg ? <div className={"v-message-" + msg.severity}>{msg.message}</div> : ""
-                }
+                <div className='v-input-container'>
+                    <Form.Check className="v-checkbox" name={def.name} type={"checkbox"}
+                        onChange={this.onChange} checked={this.state.value} />
+                </div>
             </Form.Group>
         )
     }
@@ -335,37 +335,32 @@ export class SelectOneField extends Component<FormFieldProp, FormFieldState>{
         this.state = { value: props.def.defaultValue, msg: undefined };
     }
     onChange = (evt: any) => {
-        let v = evt.target.checked;
         let def = this.props.def;
         let msg = undefined;
         let t = evt.target.id;
-        this.setState({ value: t, msg: msg });
-        this.props.onInput({ def: def, value: v, hasError: msg !== undefined, errorMsg: msg, ...evt });
+        this.setState({ value: [t], msg: msg });
+        this.props.onInput({ def: def, value: [t], hasError: msg !== undefined, errorMsg: msg, ...evt });
     }
 
     render() {
         let def = this.props.def;
         let msg = this.state.msg;
         return (
-            <Form.Group className="mb-3" controlId={this.id}>
+            <Form.Group className="v-form-field" controlId={this.id}>
                 {
-                    def.labelMode.includes("label") ? <Form.Label>{def.getLabel()}</Form.Label> : ""
+                    def.labelMode.includes("label") ? <Form.Label className="v-form-label">{def.getLabel()}</Form.Label> : ""
                 }
-                <>
-                    {
-                        def.label !== undefined ? <Form.Label >{def.getLabel()}</Form.Label> : ""
-                    }
-                    {' '}
+                <div className='v-input-container'>
                     {
                         def.labels?.map((o: any, idx: number) => {
                             return (
-                                <Form.Check inline key={idx}
+                                <Form.Check className="v-input" inline key={idx}
                                     type={"radio"} id={o} name={def.name} onChange={this.onChange}
-                                    label={o} />
+                                    label={o} checked={this.state.value.includes(o)} />
                             )
                         })
                     }
-                </>
+                </div>
                 {
                     msg ? <div className={"v-message-" + msg.severity}>{msg.message}</div> : ""
                 }
@@ -377,8 +372,9 @@ export class SelectManyField extends Component<FormFieldProp, FormFieldState>{
     id: any = StringUtils.guid();
     constructor(props: FormFieldProp) {
         super(props);
-        this.state = { value: [], msg: undefined };
+        this.state = { value: props.def.defaultValue, msg: undefined };
     }
+
     onChange = (evt: any) => {
         let v = evt.target.checked;
         let id = evt.target.id;
@@ -398,26 +394,22 @@ export class SelectManyField extends Component<FormFieldProp, FormFieldState>{
         let def = this.props.def;
         let msg = this.state.msg;
         return (
-            <Form.Group className="mb-3" controlId={this.id}>
+            <Form.Group className="v-form-field " controlId={this.id}>
                 {
-                    def.labelMode.includes("label") ? <Form.Label>{def.getLabel()}</Form.Label> : ""
+                    def.labelMode.includes("label") ? <Form.Label className="v-form-label">{def.getLabel()}</Form.Label> : ""
                 }
-                <>
-                    {
-                        def.label !== undefined ? <Form.Label >{def.getLabel()}</Form.Label> : ""
-                    }
-                    {' '}
+                <div className='v-input-container'>
                     {
                         def.labels?.map((o: any, idx: number) => {
                             return (
-                                <Form.Check inline key={idx}
+                                <Form.Check className="v-input" inline key={idx}
                                     checked={this.state.value.includes(o)}
                                     type={"checkbox"} id={o} name={def.name} onChange={this.onChange}
                                     label={o} />
                             )
                         })
                     }
-                </>
+                </div>
                 {
                     msg ? <div className={"v-message-" + msg.severity}>{msg.message}</div> : ""
                 }
@@ -432,7 +424,8 @@ export class SelectField extends Component<FormFieldProp, FormFieldState>{
         if (props.id) {
             this.id = props.id;
         }
-        this.state = { value: this.props.entity[props.def.name] }
+        let v = (this.props.entity as any)[props.def.name];
+        this.state = { value: v }
     }
     onChange = (evt: any) => {
         let v = evt.target.value;
@@ -452,30 +445,71 @@ export class SelectField extends Component<FormFieldProp, FormFieldState>{
     render() {
         let def = this.props.def;
         return (
-            <Form.Group className="mb-3" controlId={this.id}>
-                {def.labelMode.includes("label") ? <Form.Label>{def.getLabel()}</Form.Label> : ""}
-                <Form.Select value={this.state.value} onInput={this.onChange}>
-                    {this.getOptions().map((opt: any, idx: number) => <option key={'opt' + idx} value={opt.value}>{opt.label}</option>)}
-                </Form.Select>
+            <Form.Group className="v-form-field" controlId={this.id}>
+                {def.labelMode.includes("label") ? <Form.Label className="v-form-label">{def.getLabel()}</Form.Label> : ""}
+                <div className="v-input-container">
+                    <Form.Select className="v-input" value={this.state.value} onInput={this.onChange}>
+                        {this.getOptions().map((opt: any, idx: number) => <option key={'opt' + idx} value={opt.value}>{opt.label}</option>)}
+                    </Form.Select>
+                </div>
             </Form.Group>
         )
     }
 }
-export class EntityForm extends Component<FormProp, FormPropState> {
+interface FormProp {
+    id?: string,
+    title?: string,
+    entity?: Entity;
+    fieldDefs?: Function;
+    onSubmit?: Function;
+    onChange?: Function;
+    mode?: string;
+    labelPosition?: string,
+    columns?: number,
+    inline?: boolean;
+}
+interface FormPropState {
+    hasError: boolean;
+    entity: Entity,
+    columns: number
+}
+export class EntityForm extends PureComponent<FormProp, FormPropState> {
     id: string;
     errors: Array<{ def: FieldDef, msg: ValidationMessage }> = [];
+
     constructor(props: FormProp) {
         super(props)
         this.id = props.id ? props.id : StringUtils.guid();
-        this.state = { hasError: false, entity: { ...props.entity } };
+        let entity = this.props.entity ? this.props.entity : EntityManager.emptyEntity()
+        this.state = { hasError: false, entity: entity, columns: 1 };
     }
+
+    screenSizeListener = (evnt: any) => {
+        let screenSize = window.innerWidth;
+        console.debug(screenSize);
+        if (screenSize > 800) {
+            this.setState({ columns: 2 });
+        }
+        else {
+            this.setState({ columns: 1 });
+        }
+    };
+
+    componentDidMount(): void {
+        window.addEventListener("resize", this.screenSizeListener);
+    }
+
+    componentWillUnmount(): void {
+        window.removeEventListener("resize", this.screenSizeListener);
+    }
+
     onSubmit = (event: any) => {
         event.preventDefault();
         let entity = { ...this.state.entity } as any;
         if (entity && this.props.onSubmit) {
-            this.props.onSubmit(entity);
+            this.props.onSubmit(entity, this);
             (document.getElementById(this.id) as any).reset();
-            this.setState({ entity: {} });
+            this.setState({ entity: EntityManager.emptyEntity() });
             if (event.nativeEvent.target.id === 'submit2') {
 
             }
@@ -491,11 +525,11 @@ export class EntityForm extends Component<FormProp, FormPropState> {
         return this.errors && this.errors.length > 0;
     }
     onChange = (evt: any) => {
-        let entity = { ...this.state.entity };
+        let entity = { ...this.state.entity } as any;
         entity[evt.def.name] = evt.value;
         this.setState({ entity: entity });
         if (entity && this.props.onChange) {
-            this.props.onChange(entity);
+            this.props.onChange(entity, this);
         }
     }
     onUpdateState = (state: any) => {
@@ -503,28 +537,27 @@ export class EntityForm extends Component<FormProp, FormPropState> {
     }
     renderField = (def: FieldDef, entity: any, idx: number) => {
         if (def.selectOptions) {
-            return <SelectField entity={entity} key={idx} def={def}
-                onInput={this.onChange}
+            return <SelectField entity={entity} def={def} onInput={this.onChange}
                 options={def.selectOptions} />
         }
         switch (def.type) {
             case ValueType.BOOLEAN:
-                return <CheckField key={idx} def={def} entity={entity} onInput={this.onChange} />
+                return <CheckField def={def} entity={entity} onInput={this.onChange} />
             case ValueType.COMPANY:
-                return <div className="mb-3">
-                    <SelectCompany def={def} entity={entity} key={idx} onSelect={this.onChange} />
-                    </div>
+                return <SelectCompany def={def} entity={entity} onSelect={this.onChange} />
             case ValueType.MANY:
-                return <SelectManyField key={idx} def={def} entity={entity} onInput={this.onChange} />
+                return <SelectManyField def={def} entity={entity} onInput={this.onChange} />
             case ValueType.ONE:
-                return <SelectOneField key={idx} def={def} entity={entity} onInput={this.onChange} />
+                return <SelectOneField def={def} entity={entity} onInput={this.onChange} />
             default:
-                return <TextField key={idx} def={def} entity={entity} onInput={this.onChange} />;
+                return <TextField def={def} entity={entity} onInput={this.onChange} />;
         }
     }
     renderFields = () => {
         let newEntity: any = { ...this.state.entity };
         let fieldDefs = EntityManager.entityToDefs(newEntity);
+
+
         if (this.props.fieldDefs) {
             if (this.props.fieldDefs instanceof Array) {
                 fieldDefs = [...this.props.fieldDefs];
@@ -533,20 +566,47 @@ export class EntityForm extends Component<FormProp, FormPropState> {
                 fieldDefs = this.props.fieldDefs();
             }
         }
+        fieldDefs = fieldDefs.filter((def: FieldDef) => !def.readonly);
+        let cols = this.props.columns ? this.props.columns : 1;
+        let rows = fieldDefs.length / cols;
+        let boxes = []
+        for (let i = 0; i < rows; i++) {
+            let row = [];
+            for (let j = 0; j < cols; j++) {
+                row.push(fieldDefs[i * cols + j]);
+            }
+            boxes.push(row);
+        }
         return (
-            fieldDefs.filter((def: FieldDef) => !def.readonly)
-                .map((def: FieldDef, idx: number) => {
-                    return (
-                        this.renderField(def, newEntity, idx)
-                    )
-                })
+            boxes.map((row: any, idx: number) => {
+                return <div key={'fd-' + idx} className="v-entity-form-row" >
+                    {this.renderRow(row, newEntity, idx)}
+                </div>
+            })
+        )
+    }
+    renderRow = (cols: FieldDef[], entity: any, idx: number) => {
+        return (
+            <Row key={idx}>
+                {
+                    cols.map((def: any, jdx: number) => {
+                        if (def) {
+                            return (
+                                <Col key={jdx}>{this.renderField(def, entity, jdx)}</Col>
+                            )
+                        } else {
+                            return ""
+                        }
+                    })
+                }
+            </Row>
         )
     }
     render() {
         let mode = this.props.mode ? this.props.mode : "submit";
         return (
             <>
-                <div className="v-entity-form">
+                <div className={"v-entity-form" + (this.props.inline ? " inline" : "")}>
                     {
                         this.props.title ? <Title title={this.props.title} /> : ""
                     }
@@ -614,7 +674,7 @@ export class EntityDetails extends Component<EntityDetailsProp> {
     }
 }
 interface ListTableProp {
-    id?:string,
+    id?: string,
     title: string
     entities: Array<any>,
     onDelete?: Function,
@@ -632,7 +692,7 @@ interface ListTableState {
 //List view of list of entities
 export class EntityList extends Component<ListTableProp, ListTableState> {
     viewMode: string = 'Table';
-    id : string;
+    id: string;
     constructor(props: ListTableProp) {
         super(props);
         this.id = props.id ? props.id : StringUtils.guid();
@@ -663,6 +723,7 @@ export class EntityList extends Component<ListTableProp, ListTableState> {
             this.props.onEdit(entity);
         }
     }
+
     getFieldDefs = (entity: any | undefined = undefined) => {
         let fieldDefs;
         if (this.props.fieldDefs) {

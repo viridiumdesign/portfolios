@@ -1,11 +1,69 @@
 .v-entity-form {
     --v-component-header-border-color:red;
     --v-component-header-border-color:rgb(233, 233, 233);
-}
-
-.v-entity-form {
     flex-wrap: nowrap;
     overflow-x: hidden;
+}
+
+.v-entity-form  .v-form-field {
+    display: block;
+    align-items: center;
+}
+
+.v-entity-form .v-form-label {
+    width: 100%;
+    overflow: hidden;
+    display: block;
+    margin-bottom: 0.2em;
+    margin-left: 0.2em;
+}
+
+.v-entity-form  .v-input-container {
+    width: 100%;
+    overflow: scroll;
+    white-space: nowrap;
+}
+
+.v-entity-form.inline  .v-form-field {
+    display: flex;
+    align-items: center;
+}
+
+.v-entity-form.inline .v-form-label {
+    width: 25%;
+    overflow: hidden;
+    display: block;
+    margin-bottom: 0.5em;
+    margin-left: 0.2em;
+}
+
+.v-entity-form.inline  .v-input-container {
+    width: 75%;
+    overflow: scroll;
+    white-space: nowrap;
+}
+
+.v-entity-form .v-entity-form-row {
+    margin-bottom: 1rem;
+    padding: 2px;
+}
+
+.v-entity-form .v-checkbox-container {
+    display: inline-block;
+    margin-left: 1rem;
+    align-items: center;
+}
+
+.v-entity-form .v-input {
+    padding: 8px;
+}
+
+.v-entity-form .v-input.form-check{
+    margin-left: 1rem;
+}
+
+.v-input.checkbox {
+    margin-top: -6px;
 }
 
 .v-entity-form .v-body-nav {

@@ -1,29 +1,29 @@
 
 import React, { Component, useEffect } from "react";
 import { Navbar, Nav, NavDropdown, ListGroup, Offcanvas } from "react-bootstrap";
-import { securityManager } from "../../common/security/v-security-manager";
+import { securityManager } from "../v-security/v-security-manager";
 import { useNavigate } from "react-router-dom";
 
-import { IMicroApp, IRouteItem, MicroApp } from "../../common/v-app";
+import { IMicroApp, IRouteItem, MicroApp } from "../v-common/v-app";
 import { VscMail } from "react-icons/vsc";
 
 import "./v-layout.css";
-import { clearCachedConfigs } from "../../config/v-config";
+import { clearCachedConfigs, getConfigs } from "../../config/v-config";
 import Badge from "@mui/material/Badge";
 
-export const v_link = (path : string) => {
-    return  process.env.PUBLIC_URL +"/#" + path
+export const v_link = (path: string) => {
+    return process.env.PUBLIC_URL + "/#" + path
 }
 
-export const v_map = (path : string) => {
-    return  path
+export const v_map = (path: string) => {
+    return path
 }
 
 export const ViridiumOffcanvas = (props: any) => {
     let showForm = props.showForm;
     let onHide = props.onHide;
     return (
-        <Offcanvas show={showForm.show} placement='end' onHide={() => onHide({ show: false, mode: 'create' })}>
+        <Offcanvas show={showForm} placement='end' onHide={() => onHide()}>
             <Offcanvas.Header closeButton>
                 <Offcanvas.Title>{props.title ? props.title : "No Title"}</Offcanvas.Title>
             </Offcanvas.Header>
@@ -94,11 +94,29 @@ export const ApplicationHeader = (props: { microApp: IMicroApp }) => {
 
 }
 
+export const PanelHeader = (props: { className?: string, title: Function, actions: Function }) => {
+    return (
+        <div className={"v-panel-header " + (props.className ? props.className : "")}>
+            <span className="v-panel-header-title">
+                {props.title()}
+            </span>
+            <span className="v-panel-header-space me-auto">
+
+            </span>
+            <span className="v-panel-header-actions">
+                {props.actions()}
+            </span>
+        </div>
+    );
+}
+
+
 export const LayoutHeader = (props: any) => {
     const microApp = props.microApp as MicroApp;
     let routeItems = microApp.getRouteItems();
     let group1 = routeItems.filter((item) => item.group === "1");
     let group2 = routeItems.filter((item) => item.group === "2");
+    const configs = getConfigs();
     const renderGroup1 = () => {
         if ((microApp as any).searchBar) {
             return (microApp as any).searchBar();
@@ -110,23 +128,28 @@ export const LayoutHeader = (props: any) => {
             }) : ""
     }
     const ui = () => (
-        <Navbar bg="green" expand="lg">
+        <Navbar expand="lg">
             <Navbar.Brand href={v_link("/")}>
                 {props.brand !== undefined ? props.brand :
-                    <><span className="v-title-1" >Viridium</span><span className="v-title-2">DESIGN</span></>
+                    <>
+                        <img src="./resources/ant.png" className="v-logo" alt={configs.title} ></img>
+                        <span className="v-title-1" >Viridium</span><span className="v-title-2">DESIGN</span>
+                    </>
                 }
             </Navbar.Brand>
+
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Nav className="me-auto">
-                {renderGroup1()}
-            </Nav>
-            <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="me-auto"> </Nav>
+            <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
+                <Nav className="me-auto">
+                    {renderGroup1()}
+                </Nav>
                 <Nav className="layout-header-end me-end">
                     {
                         group2.length > 0 ?
                             group2.map((routeItem, idx) => {
-                                return <Nav.Link id={"nav-end-" + idx} key={"menu_item_" + idx}
+
+                                return <Nav.Link id={"nav-end-" + idx}
+                                    key={"menu_item_" + idx}
                                     href={v_link(routeItem.route)}>{routeItem.name}</Nav.Link>
                             }) : ""
                     }
@@ -163,13 +186,13 @@ export const LayoutFooter = (props: { microApp?: IMicroApp, children: any }) => 
         <div className="v-page-footer">
             {
                 props.children ? props.children :
-                    <div className=".bg-light">'Copyright © 2022 Viridium DESIGN - All Rights Reserved.'</div>
+                    <div className=".bg-light">{getConfigs().copyright}</div>
             }
         </div>
     )
 }
 
-export const LayoutPage = (props: { microApp: IMicroApp, children: any }) => {
+export const LayoutPage = (props: { microApp: IMicroApp, children: any, header?: boolean, pageName?:string }) => {
     const microApp: MicroApp = props.microApp;
     const navigate = useNavigate();
     useEffect(() => {
@@ -188,10 +211,10 @@ export const LayoutPage = (props: { microApp: IMicroApp, children: any }) => {
         }
         return (
             <div className={`${microApp.getName()}`}>
-                <div className={`${microApp.getPageClass()}`}>
+                <div className={props.pageName ? props.pageName : "v-page-" + microApp.getName()}>
                     <div className="v-layout">
                         <LayoutHeader brand={brand} microApp={microApp} />
-                        <ApplicationHeader microApp={microApp} />
+                        {props.header ? <ApplicationHeader microApp={microApp} /> : ""}
                         <div className={'v-page-body'}>
                             {microApp.getNavItems().length > 0 ? <LayoutBodyNav routeItems={microApp.getNavItems()} /> : ""}
                             {main}

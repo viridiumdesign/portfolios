@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { sessionCache } from '../../utils/v-cache-manager';
+import { sessionCache } from '../v-utils/v-cache-manager';
 
 export class SecurityResponse {
     status? : number;

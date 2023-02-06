@@ -1,7 +1,7 @@
 import React from 'react'
 import { VscArrowDown, VscSearch } from 'react-icons/vsc';
-import { StringUtils } from '../../utils/v-string-utils';
 import { FieldDef } from '../v-entity/entity-form';
+import { StringUtils } from '../v-utils/v-string-utils';
 import "./v-select.css";
 type OptionValue = {
     value: string,

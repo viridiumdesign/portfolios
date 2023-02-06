@@ -1,11 +1,13 @@
 import { FieldDef, ValueType, Visibility } from "./entity-form";
 import { DataService } from "../v-data/data-service";
-import { StringUtils } from "../../utils/v-string-utils";
+import { securityManager } from "../v-security/v-security-manager";
+import { StringUtils } from "../v-utils/v-string-utils";
 
 export interface Entity {
     id: string,
     name: string,
     createdAt: Date;
+    validated: boolean;
 }
 
 export enum Cadence {
@@ -15,6 +17,7 @@ export enum Cadence {
     QUARTERLY = "Quarterly",
     YEARLY = "Yearly"
 }
+
 export interface Formatter {
     format(v: any): string
 }
@@ -34,6 +37,10 @@ export type ValidationMessage = {
 }
 export interface Validator {
     validate(v: any, entity: any): ValidationMessage
+}
+
+export const CREDIT_CARD = (value : string) =>{
+    return undefined;
 }
 
 export const EMAIL = (v: string) => {
@@ -69,7 +76,7 @@ export class EntityManager {
     name = () => this.entityName;
 
     getPermissions = () => {
-        return ["create", "edit", "delete", "select"]
+        return ["create", "update", "delete", "select"]
     }
     get(): Array<Entity> {
         this.db = db.getDB();
@@ -123,16 +130,21 @@ export class EntityManager {
         return this.create(data);
     }
 
-    new(): any {
-        let newEntity = {} as any;
+    defaultEntity(): Entity {
+        let newEntity = {id :  StringUtils.guid()} as any;
         this.getFieldDefs().forEach((def) => {
             newEntity[def.name] = def.defaultValue;
         });
-        if (newEntity.id === undefined) {
-            newEntity.id = StringUtils.guid();
-        }
+        console.debug("Defaut entity", newEntity);
         return newEntity;
     }
+
+    static emptyEntity(): Entity {
+        let newEntity = {id :  StringUtils.guid()} as any;
+    
+        return newEntity;
+    }
+
     getFieldDefs() {
         return [
             FieldDef.new("id").options("visibility", Visibility.LIMITED).options("readonly", true),
@@ -183,6 +195,37 @@ export class EntityManager {
             return [];
         }
     }
+}
+
+export class BaseEntity implements Entity {
+    id: string;
+    name: string;
+    createdAt: Date;
+    createdBy: string;
+    validated : boolean = false;
+    constructor() {
+        this.id = StringUtils.guid();
+        this.name = "";
+        this.createdAt = new Date();
+        this.createdBy = securityManager.getUserName();
+    }
+
+    clone = (c: any): any => {
+        Object.assign(this, c);
+        this.id = StringUtils.guid();
+        this.createdAt = new Date();
+        this.createdBy = securityManager.getUserName();
+        return this;
+    }
+    assign = (c: any): any => {
+        Object.assign(this, c);
+        return this;
+    }
+}
+export enum Gender {
+    MALE="Male",
+    FEMALE="Female",
+    OTHER="Other"
 }
 
 export class Audit {

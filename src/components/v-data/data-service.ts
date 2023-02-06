@@ -1,4 +1,4 @@
-import { localCache } from "../../utils/v-cache-manager";
+import { localCache } from "../v-utils/v-cache-manager";
 import { metadataManager } from "../v-entity/entity-model";
 
 export type Quote = {

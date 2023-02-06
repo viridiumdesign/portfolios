@@ -1,4 +1,4 @@
-import { Circle } from "./diagram";
+import { Circle } from "../v-flow/diagram";
 
 export class DataPoint {
     x: number = 0;

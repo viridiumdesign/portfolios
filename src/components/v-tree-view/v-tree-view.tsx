@@ -134,12 +134,12 @@ class TreeView extends React.Component<TreeViewProperty, TreeViewState> {
             let parent = this.findNodeById(this.state.data, node.parent.id);
             siblings = parent?.children;
         }
-        if (!siblings){
+        if (!siblings) {
             siblings = this.state.data;
         }
         if (siblings) {
             siblings.forEach((sibling: Node) => {
-                if(node.id !== sibling.id) sibling.state.selected = false;
+                if (node.id !== sibling.id) sibling.state.selected = false;
             });
         }
     }

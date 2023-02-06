@@ -1,4 +1,4 @@
-import { localCache } from "../utils/v-cache-manager";
+import { localCache } from "../components/v-utils/v-cache-manager";
 
 export class EventManager {
     handlers : Map<string, Array<Function>> = new Map();

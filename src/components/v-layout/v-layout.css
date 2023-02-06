@@ -9,13 +9,29 @@
     --v-notifications-bg:rgba(255, 0, 0, 0.802);
 }
 
+.v-panel-header {
+    display: flex;
+    padding: .5em 1em;
+    align-items: center;
+    background-color: rgb(214, 214, 214);
+    border-radius: 5px 5px 0px 0px;
+}
+
+.v-panel-header-title {
+    font-weight: bold;
+}
+
+.v-panel-header-actions {
+    display: flex;
+    align-items: center;
+}
+
 .v-layout .navbar-brand {
     margin-left: 0.4em;
 }
 
 .v-layout .nav-link {
-    margin-right: 1.0em;
-    margin-left: -1em;
+    margin: 0.0em 4px;
 }
 
 .v-layout .v-layout-header-end {
