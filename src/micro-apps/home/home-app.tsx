@@ -1,5 +1,5 @@
 import { Route } from "react-router-dom";
-import { WelcomePage } from "./welcome";
+import { HomePage } from "./home";
 import './home-app.css';
 import { v_map } from "../../components/v-layout/v-layout";
 import { MicroApp, RouteItem } from "../../components/v-common/v-app";
@@ -31,8 +31,8 @@ class HomeApp extends MicroApp {
 
     return (
       <>
-        <Route path={v_map("/")} element={<WelcomePage />} />
-        <Route path={v_map("/home-app")} element={<WelcomePage />} />
+        <Route path={v_map("/")} element={<HomePage />} />
+        <Route path={v_map("/home-app")} element={<HomePage />} />
       </>
     );
   }

@@ -4,7 +4,7 @@ import { Row, Col } from 'react-bootstrap';
 import { LayoutPage } from '../../components/v-layout/v-layout';
 import { homeApp } from './home-app';
 
-export const WelcomePage = (props: any) => {
+export const HomePage = (props: any) => {
 
   return (
     <LayoutPage microApp={homeApp}>
