@@ -3,48 +3,79 @@
 import { Row, Col } from 'react-bootstrap';
 import { LayoutPage } from '../../components/v-layout/v-layout';
 import { homeApp } from './home-app';
-
 export const HomePage = (props: any) => {
-
   return (
     <LayoutPage microApp={homeApp}>
       <div className="home-page v-container">
-        <Row className="intro">
+        <Row className="v-page">
           <Col sm={7}>
-            <p className="headline">Want to build sleek, modern cloud applications?</p>
-            <p />
-            <span className="v-title"><span className="v-title-1">Viridium</span>DESIGN</span>{' '}
-            <span className="v-text">
-              offers a comprehensive set of tools and features
-              designed to streamline your development process, helping you to create stunning,
-              interactive, and responsive web applications.
-              <p />
-              With its intuitive design,
-              easying coding, and flexible architecture, you can build applications
-              that deliver exceptional user
-              experiences and meet the demands of your users.
-              <p />Whether you're a seasoned
-              developer or just starting out, our framework is the perfect
-              choice for building your next project. </span>
+            <div className="text-box">
+              <span className="headline-content">
+                Hi! I'm Sarah,<br /> a UX/UI Designer from the Bay Area
+              </span>
+            </div>
           </Col>
-          <Col className="dog" sm={5}>
-            <img className="green-img v-shadow" alt="img" src="./resources/foot.png" />
+          <Col className="text-box" sm={5}>
+            <span className="blurb-content">
+              I love working on diverse projects that are innovative and bring about real change in
+              community
+            </span>
           </Col>
         </Row>
+
+        <div className="v-page">
+          <div className="v-header">Projects</div>
+          <Row>
+            <Col sm={7} >
+              <div id="p1" className="v-project">
+              </div>
+            </Col>
+            <Col sm={5}>
+              <div id="viridium" className="v-project">
+                <Row>
+                  <Col sm={7}>
+                    <div className="v-project-content v-title">
+                      Viridium
+                    </div>
+                  </Col>
+                  <Col sm={5}>
+                    <div className="v-project-content">
+                      <div className="v-button">Product Design</div>
+                      <div className="v-button">Sustainability</div>
+                    </div>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col sm={7}>
+                    <div className="v-project-content">
+                      <span className="v-project-desc">
+                        Re-imagining the way companies understand and track their carbon emissions
+                      </span>
+                    </div>
+                  </Col>
+                  <Col sm={5}>
+                    <div className="v-project-content">
+                      <span className="v-link"> &gt; </span>
+                    </div>
+                  </Col>
+                </Row>
+              </div>
+            </Col>
+          </Row>
+          <Row>
+            <Col sm={5}>
+              <div id="p2" className="v-project">
+              </div>
+            </Col>
+            <Col sm={7}>
+              <div id="p3" className="v-project">
+
+              </div>
+            </Col>
+          </Row>
+        </div>
         <Row className="divider"><Col> </Col></Row>
       </div>
-      
-      <span slot="brand">
-        <span className="v-title-1" >Viridium</span><span className="v-title-2">DESIGN</span>
-      </span>
-
-      <div className="v-footer-welcome" slot="footer">
-        <Col sm={1}><div className="step1"></div></Col>
-        <Col sm={2}><div className="step2"></div></Col>
-        <Col sm={4}><div className="step3"></div></Col>
-        <Col sm={5}><div className="step4"></div></Col>
-      </div>
-
     </LayoutPage>
   );
 }

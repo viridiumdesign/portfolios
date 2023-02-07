@@ -3,6 +3,7 @@ import { HomePage } from "./home";
 import './home-app.css';
 import { v_map } from "../../components/v-layout/v-layout";
 import { MicroApp, RouteItem } from "../../components/v-common/v-app";
+import { About } from "./about";
 
 class HomeApp extends MicroApp {
   getTitle = (): string => {
@@ -17,8 +18,9 @@ class HomeApp extends MicroApp {
   }
 
   private routeItems: Array<RouteItem> = [
+    new RouteItem().init("Work", "About", "2", "/home-app/work"),
+    new RouteItem().init("About", "About", "2", "/home-app/about")
   ];
-
   public getRouteItems = () => {
     return this.routeItems;
   }
@@ -33,6 +35,8 @@ class HomeApp extends MicroApp {
       <>
         <Route path={v_map("/")} element={<HomePage />} />
         <Route path={v_map("/home-app")} element={<HomePage />} />
+        <Route path={v_map("/home-app/projects")} element={<HomePage />} />
+        <Route path={v_map("/home-app/about")} element={<About />} />
       </>
     );
   }

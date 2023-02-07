@@ -1,6 +1,6 @@
 .navbar {
   --bs-navbar-padding-y: 20px;
-  --bs-navbar-padding-x: 10px;
+  --bs-navbar-padding-x: 50px;
   --bs-navbar-color: rgb(92, 92, 92);
   --bs-navbar-hover-color: rgba(172, 203, 250, 0.7);
   --bs-navbar-disabled-color: rgba(0, 0, 0, 0.3);
@@ -19,7 +19,7 @@
   --bs-navbar-toggler-border-radius: 0.375rem;
   --bs-navbar-toggler-focus-width: 0.25rem;
   --bs-navbar-toggler-transition: box-shadow 0.15s ease-in-out;
-  --bs-navbar-bg:rgb(10, 116, 77);
+  --bs-navbar-bg:rgb(255, 255, 255);
   position: relative;
   display: flex;
   flex-wrap: wrap;
@@ -191,7 +191,6 @@ body {
   border: 1px white solid;
   border-radius: 18px;
   text-align: center;
-  padding: 0.5em 1.5em;
 }
 
 .v-field-label {

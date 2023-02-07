@@ -132,8 +132,8 @@ export const LayoutHeader = (props: any) => {
             <Navbar.Brand href={v_link("/")}>
                 {props.brand !== undefined ? props.brand :
                     <>
-                        <img src="./resources/ant.png" className="v-logo" alt={configs.title} ></img>
-                        <span className="v-title-1" >Viridium</span><span className="v-title-2">DESIGN</span>
+                        <img src="./resources/luckie.png" className="v-logo" alt={''} ></img>
+                        <span className="v-title-1" >Sarah</span><span className="v-title-2">Wang</span>
                     </>
                 }
             </Navbar.Brand>
@@ -192,7 +192,7 @@ export const LayoutFooter = (props: { microApp?: IMicroApp, children: any }) => 
     )
 }
 
-export const LayoutPage = (props: { microApp: IMicroApp, children: any, header?: boolean, pageName?:string }) => {
+export const LayoutPage = (props: { microApp: IMicroApp, children: any, header?: boolean, pageName?: string }) => {
     const microApp: MicroApp = props.microApp;
     const navigate = useNavigate();
     useEffect(() => {
