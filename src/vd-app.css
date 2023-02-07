@@ -1,25 +1,25 @@
 .navbar {
   --bs-navbar-padding-y: 20px;
   --bs-navbar-padding-x: 50px;
-  --bs-navbar-color: rgb(92, 92, 92);
-  --bs-navbar-hover-color: rgba(172, 203, 250, 0.7);
+  --bs-navbar-color: rgb(0, 0, 0);
+  --bs-navbar-hover-color: rgba(0, 102, 255, 0.7);
   --bs-navbar-disabled-color: rgba(0, 0, 0, 0.3);
-  --bs-navbar-active-color: rgba(239, 15, 15, 0.9);
+  --bs-navbar-active-color: rgba(255, 255, 255, 0.9);
   --bs-navbar-brand-padding-y: 0.3125rem;
   --bs-navbar-brand-margin-end: 1rem;
   --bs-navbar-brand-font-size: 1.25rem;
   --bs-navbar-brand-color: rgba(245, 245, 245, 0.9);
-  --bs-navbar-brand-hover-color: rgba(156, 255, 182, 0.9);
+  --bs-navbar-brand-hover-color: rgba(50, 70, 245, 0.9);
   --bs-navbar-nav-link-padding-x: 0.5rem;
   --bs-navbar-toggler-padding-y: 0.25rem;
-  --bs-navbar-toggler-padding-x: 0.75rem;
-  --bs-navbar-toggler-font-size: 1.25rem;
+  --bs-navbar-toggler-padding-x: 0.25rem;
+  --bs-navbar-toggler-font-size: 1rem;
   --bs-navbar-toggler-icon-bg: url(data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 30 30%27%3e%3cpath stroke=%27rgba%280, 0, 0, 0.55%29%27 stroke-linecap=%27round%27 stroke-miterlimit=%2710%27 stroke-width=%272%27 d=%27M4 7h22M4 15h22M4 23h22%27/%3e%3c/svg%3e);
-  --bs-navbar-toggler-border-color: rgba(144, 23, 23, 0.1);
+  --bs-navbar-toggler-border-color: rgba(63, 7, 7, 0.1);
   --bs-navbar-toggler-border-radius: 0.375rem;
-  --bs-navbar-toggler-focus-width: 0.25rem;
+  --bs-navbar-toggler-focus-width: 0rem;
   --bs-navbar-toggler-transition: box-shadow 0.15s ease-in-out;
-  --bs-navbar-bg:rgb(255, 255, 255);
+  --bs-navbar-bg: rgb(255, 255, 255);
   position: relative;
   display: flex;
   flex-wrap: wrap;
@@ -27,6 +27,19 @@
   justify-content: space-between;
 }
 
+.navbar-toggler:hover {
+  border: rgb(80, 188, 255) 1px solid;
+  box-shadow: 0.2em 0.2em .2em rgb(187, 187, 187, 0.6);
+}
+/*this toggler menu*/
+@media only screen and (max-width: 990px) {
+  .justify-content-end.collapse{
+    border: 1px solid var(--bs-navbar-toggler-border-color);
+    box-shadow: 0.2em 0.2em .2em rgb(187, 187, 187, 0.6);
+    padding: 1em 1em;
+    border-radius: .5em;
+  }
+}
 body {
   font: 1em sans-serif;
 }
@@ -42,8 +55,8 @@ body {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .app-logo {
-    animation: app-logo-spin infinite 20s linear;
+  .navbar-toggler {
+    animation: app-logo-spin infinite 10s linear;
   }
 }
 
@@ -74,46 +87,6 @@ body {
 
 .v-form {
   padding: 1rem;
-}
-
-.v-message {
-  min-height: 100px;
-  font-size: 2em;
-  color: rgb(158, 193, 172);
-  background-color: rgb(239, 239, 239);
-  margin-top: 4px;
-}
-
-.v-message-verbose {
-  background-color: blanchedalmond;
-  color: rgb(77, 77, 77);
-  font-size: small;
-  padding-left: .2em;
-  margin-top: 4px;
-}
-
-.v-message-info {
-  background-color: rgb(242, 242, 242);
-  color: #141b14;
-  font-size: small;
-  padding-left: .2em;
-  margin-top: 4px;
-}
-
-.v-message-warning {
-  background-color: blanchedalmond;
-  color: rgb(39, 39, 39);
-  font-size: small;
-  padding-left: .2em;
-  margin-top: 4px;
-}
-
-.v-message-error {
-  background-color: rgb(241, 241, 241);
-  color: red;
-  font-size: small;
-  padding-left: .2em;
-  margin-top: 4px;
 }
 
 .v-container {

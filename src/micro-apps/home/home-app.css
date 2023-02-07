@@ -89,7 +89,7 @@
 
 .home-app .text-box {
     position: relative;
-    height: 80vh;
+    height: 90vh;
 }
 
 .home-app .headline-content {
@@ -100,7 +100,7 @@
     line-height: 54px;
     display: block;
     position: absolute;
-    bottom: 5vh
+    bottom: 15vh
 }
 
 .home-app .blurb-content {
@@ -109,15 +109,21 @@
     bottom: 0px;
     width: 80%;
     text-align: right;
-    bottom: 5vh
+    bottom: 15vh
 }
 
 .v-project {
     height: 45vh;
     background: rgb(236, 236, 236);
-    margin: .2em;
+    margin: .4em;
     padding:1em;
     border-radius: 1em;
+    border: 4px rgba(0, 132, 255, 0) solid;
+}
+
+.v-project:hover {
+    box-shadow: .5em .5em .5em rgba(128, 124, 124, 0.2);
+    border: 4px rgba(218, 10, 10, 0.31) solid;
 }
 
 .v-project-content {
@@ -138,4 +144,15 @@
 .v-project-desc {
     bottom:10px;
     position: absolute;
+}
+.work-in-progress {
+    height: 80vh;
+    width: 80vw;
+    padding: 1em;
+    background-color: aliceblue;
+    margin: 2em auto;
+    padding: 1em 0em;
+    text-align: center;
+    font-size: 2em;
+    background: linear-gradient(rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.0)), url("../../../public/work-in-progress.png");
 }

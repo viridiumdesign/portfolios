@@ -4,6 +4,7 @@ import './home-app.css';
 import { v_map } from "../../components/v-layout/v-layout";
 import { MicroApp, RouteItem } from "../../components/v-common/v-app";
 import { About } from "./about";
+import { Work } from "./work";
 
 class HomeApp extends MicroApp {
   getTitle = (): string => {
@@ -12,7 +13,7 @@ class HomeApp extends MicroApp {
   public getName = () => {
     return "home-app";
   }
-
+  public isSecure = () => false; 
   public getIcon = () => {
     return "luckie.png";
   }
@@ -35,7 +36,7 @@ class HomeApp extends MicroApp {
       <>
         <Route path={v_map("/")} element={<HomePage />} />
         <Route path={v_map("/home-app")} element={<HomePage />} />
-        <Route path={v_map("/home-app/projects")} element={<HomePage />} />
+        <Route path={v_map("/home-app/work")} element={<Work />} />
         <Route path={v_map("/home-app/about")} element={<About />} />
       </>
     );
