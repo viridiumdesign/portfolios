@@ -1,5 +1,5 @@
-import React, { PureComponent } from 'react'
-import { VscPlay } from 'react-icons/vsc';
+import { PureComponent } from 'react'
+import { AiFillCaretRight } from "react-icons/ai";
 import { StringUtils } from '../v-utils/v-string-utils';
 
 import "./v-nav-slider.css";
@@ -63,7 +63,7 @@ export class NavSlider extends PureComponent<NavSliderProps, NavSliderState>{
                         return <div id={opt.value} key={idx} onClick={this.onSelect}
                             className={"v-nav-slider-item" + (opt.value === this.state.selected ? " v-selected" : "")} >
                             <span className={"v-icon" + (opt.value === this.state.selected ? " v-selected" : "")}>
-                                <VscPlay />
+                                <AiFillCaretRight />
                             </span>
                             <span className="v-label">{opt.label} </span>
                         </div>

@@ -1,55 +1,4 @@
-.home-app .home-content {
-    padding: 1rem;
-    font-size: 28px;
-}
 
-.home-app .home-page {
-    padding: 0.5rem;
-    height: 95vh;
-}
-
-.home-app .v-container {
-    width: 80vw;
-    margin: 0px auto 0px auto;
-    border-width: 1px;
-    border: 0px solid red;
-}
-
-.home-app  .v-header {
-    font-size: 3em;
-    font-weight: 700;
-    margin-bottom: 1em;
-}
-.v-work-img {
-    width: 90%;
-}
-
-.v-project-item {
-    height: 30vh;
-    padding: 2em 3em;
-}
-
-.v-project-item span {
-    display: inline-block;
-    margin-bottom: 2em;
-}
-
-.v-project-item li {
-    display: inline-block;
-   list-style: none;
-}
-
-
-.v-work-img-container {
-    padding: 2em;
-}
-
-
-.home-app .v-summary {
-    font-size: 1.3em;
-    line-height: 1.3em;
-    margin: 1.5em;
-}
 .row {
 
     border: 0px solid red;
@@ -60,10 +9,56 @@
     border: 0px solid red;
 }
 
+
+.home-app .home-content {
+    padding: 1rem;
+    font-size: 28px;
+}
+
+.home-app .home-page {
+    padding: 0.5rem;
+    height: 80vh;
+    overflow-y: scroll;
+}
+
+
+.home-app .v-container {
+    width: 80vw;
+    margin: 0px auto 0px auto; 
+    border: 0px solid red;
+}
+
+.v-project-item {
+    padding: 2em 3em;
+}
+
+
+
+.v-project-item span {
+    display: inline-block;
+    margin-bottom: 2em;
+}
+
+.v-project-item li {
+   list-style: none;
+   padding: 4px 1em;
+}
+
+
+.v-work-img-container {
+    padding: 2em;
+}
+
 .home-app .v-header {
     padding: 0.8em;
     background: none;
     font-weight: 700;
+}
+
+.home-app .v-summary {
+    font-size: 1.3em;
+    line-height: 1.3em;
+    margin: 1.5em;
 }
 
 .home-app .v-body {
@@ -156,7 +151,7 @@
     text-align: right;
     bottom: 15vh
 }
-
+/*work and projects*/
 .v-project {
     height: 45vh;
     background: rgb(236, 236, 236);
@@ -191,6 +186,51 @@
     position: absolute;
 }
 
+.v-chapter-nav {
+    position: absolute;
+    z-index: 1000;
+    right: 10vw;
+    bottom: 10vh;
+    padding: 1em;
+}
+
+/*About page*/
+.v-about {
+    font: 1em sans-serif;
+    color: rgb(89, 133, 174);
+}
+.about-app  .v-header {
+    font-size: 1.5em;
+    font-weight: 500;
+    margin: 1em;
+} 
+
+.v-img-container {
+    padding: 2em;
+    text-align: center;
+}
+
+.v-work-img {
+    width: 80%;
+}
+
+.v-path-img {
+    width: 60%;
+    margin: 5em auto;
+}
+
+.v-hobby {
+    padding: 2em;
+}
+
+.v-hobby .v-button {
+    display: inline-block;
+    margin: .5em;
+    padding: 0.5em 1.5em;
+    border: 1px rgb(85, 8, 102) solid;
+}
+
+/*Working in*/
 .work-in-progress {
     height: 180vh;
     width: 1000px;
@@ -201,20 +241,4 @@
     text-align: center;
     font-size: 2em;
     background: linear-gradient(rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.0)), url("../../../public/work-in-progress.png");
-}
-
-
-.v-chapter-nav {
-    position: absolute;
-    z-index: 1000;
-    right: 10vw;
-    bottom: 10vh;
-    padding: 1em;
-}
-
-
-
-.home-page {
-    height: 80vh;
-    overflow-y: scroll;
 }
