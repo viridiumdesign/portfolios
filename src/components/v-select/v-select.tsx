@@ -17,6 +17,7 @@ type SelectProps = {
     placeholder?: string;
     def?:FieldDef;
     entity? : any;
+    optionRender?:Function
 }
 
 type SelectState = {
@@ -105,7 +106,10 @@ export class Select extends React.Component<SelectProps, SelectState>{
                             return <li id={this.id + "_" + option.value} key={idx} className="v-select-option" onMouseEnter={this.onMouseEnter}
                                 onMouseLeave={this.onMouseLeave}
                                 onClick={this.onSelect} >
-                                <span className="v-select-option-text"> {option.label}</span>
+                                {
+                                    this.props.optionRender ? this.props.optionRender(option, idx)
+                                        : <span className="v-select-option-text"> {option.label}</span>
+                                }
                             </li>
                         })
                     }

@@ -67,7 +67,7 @@ export const Money = new Intl.NumberFormat('en-US', {
 const db = new DataService();
 export const getDB = db.getDB;
 
-export class EntityManager {
+export class EntityManager<T extends Entity> {
  
     entityName: string;
     db: any;
@@ -79,7 +79,7 @@ export class EntityManager {
     getPermissions = () => {
         return ["create", "update", "delete", "select"]
     }
-    get(): Array<Entity> {
+    get(): Array<T> {
         this.db = db.getDB();
         let entities = this.db[this.entityName]?.map((c: any) => {
             return this.load(c);
@@ -114,7 +114,7 @@ export class EntityManager {
         console.log(entityId + " is selected");
     }
 
-    update(entity: Entity | undefined = undefined) {
+    update(entity: T | undefined = undefined) {
         if (entity) {
             let entities = this.entities().filter((c: Entity) => c.id !== entity.id);
             entities.push(entity);
@@ -131,7 +131,7 @@ export class EntityManager {
         return this.create(data);
     }
 
-    defaultEntity(): Entity {
+    defaultEntity(): T {
         let newEntity = {id :  StringUtils.guid()} as any;
         this.getFieldDefs().forEach((def) => {
             newEntity[def.name] = def.defaultValue;
@@ -244,10 +244,7 @@ export class Audit {
         this.recordDate = new Date();
     }
 }
-export class MetaDataManager extends EntityManager {
-    constructor() {
-        super("Metadata");
-    }
+export class MetaDataManager {
 
     getCountries = () => {
         return getDB()["countries"].map((c:any)=>{
@@ -272,7 +269,8 @@ export class MetaDataManager extends EntityManager {
         return companies.rows.map((r: any) => {
             return {
                 value: r[1],
-                label: r[2]
+                label: r[2],
+                company: this.rowToCompany(r)
             }
         })
     }

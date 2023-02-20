@@ -33,7 +33,6 @@ class Node {
     icon?: string;
     color?: string;
     bgColor?: string;
-    selectable : boolean = false;
     isLeaf = (): boolean => {
         return this.children !== undefined ? this.children.length === 0 : true;
     }
@@ -77,7 +76,6 @@ class TreeView extends React.Component<TreeViewProperty, TreeViewState> {
                 id: childNode.id,
                 children: this.setNodeId(childNode),
                 parent: node,
-                selectable:childNode.selectable,
                 state: {
                     selected: childNode.state ? !!childNode.state.selected : false,
                     expanded: childNode.state ? !!childNode.state.expanded : false
@@ -121,6 +119,7 @@ class TreeView extends React.Component<TreeViewProperty, TreeViewState> {
             children.forEach((child: Node) => {
                 child.state = state;
                 child.state.selected = state.selected;
+                //  this.setChildrenState(child.children, state);
             });
     }
     setParentSelectable(node: Node) {
@@ -166,7 +165,7 @@ class TreeView extends React.Component<TreeViewProperty, TreeViewState> {
                 if (selected) this.unsetSiblingState(node, node.state);
             }
             this.setState({ data: this.state.data });
-            if (this.props.onClick && node.selectable) {
+            if (this.props.onClick) {
                 this.props.onClick(this.state.data, node);
             }
             this.updateTree();
@@ -354,7 +353,7 @@ export class TreeNode extends React.Component<TreeNodeProperty, TreeNodeState> {
         let uiOptions: NodeUIOptions = defaultNodeUIOptions;
         Object.assign(uiOptions, this.props.options);
         let cssStyle: any;
-        if (this.props.options?.selectable && node.state.selected) {
+        if (this.props.options.selectable) {
             node.icon = (node.state.selected) ? uiOptions.selectedIcon : uiOptions.unselectedIcon;
         }
         if (!this.props.visible) {
@@ -363,7 +362,7 @@ export class TreeNode extends React.Component<TreeNodeProperty, TreeNodeState> {
             };
         }
         else {
-            if (uiOptions.highlightSelected && node.selectable) {
+            if (uiOptions.highlightSelected && node.state.selected) {
                 cssStyle = {
                     color: uiOptions.selectedColor,
                     backgroundColor: uiOptions.selectedBgColor
@@ -400,7 +399,7 @@ export class TreeNode extends React.Component<TreeNodeProperty, TreeNodeState> {
             expandCollapseIcon = (<span style={{ display: "inline-block", width: "1rem", height: "1rem", "marginLeft": "2px" }}></span>)
         }
         let nodeIcon;
-        if (uiOptions.selectable && node.selectable && (node.icon || uiOptions.nodeIcon)) {
+        if (uiOptions.selectable && (node.icon || uiOptions.nodeIcon)) {
             nodeIcon = node.state.selected ?
                 (<VscCheck onClick={this.toggleSelected} style={treeviewSpanIconStyle} />) :
                 (<VscPrimitiveSquare onClick={this.toggleSelected} style={treeviewSpanIconStyle} />);
@@ -439,7 +438,7 @@ export class TreeNode extends React.Component<TreeNodeProperty, TreeNodeState> {
         let addButton = this.props.allowNew ? (
             <span className="glyphicon glyphicon-plus addElement" style={{ float: "right", cursor: "pointer" }}
                 onClick={this.newNodeForm}></span>) : "";
-        let removeButton = this.props.options?.removable ? (
+        let removeButton = this.props.options.removable ? (
             <span className="glyphicon glyphicon-remove removeElement" style={{ cursor: "pointer" }}
                 onClick={this.removeNode}></span>) : "";
         let newNode;

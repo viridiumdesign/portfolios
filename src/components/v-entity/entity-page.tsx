@@ -5,9 +5,10 @@ import { ViridiumOffcanvas } from '../v-layout/v-layout';
 import { Entity, EntityManager } from './entity-model';
 import { EntityForm, EntityList } from './entity-form';
 import { StringUtils } from '../v-utils/v-string-utils';
+import ViridiumTable from '../v-table/v-table';
 
 interface EntityPageProps {
-    manager: EntityManager;
+    manager: EntityManager<Entity>;
     readonly?: boolean;
     onSelect?: Function
     emptyListMsg?: string
@@ -53,7 +54,7 @@ export class EntityPage extends Component<EntityPageProps, EntityPageState> {
             this.setState({ entities: this.props.manager.get() });
         }
     }
-    onSelect = (entity: any) => {
+    onSelect = (id: any, entity: any, target:any) => {
         if (entity) {
             this.props.manager.select(entity.id);
             if (this.props.onSelect) {
@@ -82,12 +83,11 @@ export class EntityPage extends Component<EntityPageProps, EntityPageState> {
                 <div id="wrap" className="v-container">
                     {
                         this.state.entities && this.state.entities.length > 0 ?
-                            <EntityList
+                            <ViridiumTable
                                 onSelect={canSelect ? this.onSelect : undefined}
                                 onEdit={canEdit ? this.onEdit : undefined}
                                 onDelete={canDelete ? this.onDelete : undefined}
-                                view={"Table"}
-                                entities={this.state.entities}
+                                rows={this.state.entities}
                                 fieldDefs={this.props.manager.getFieldDefs}
                                 title={this.props.manager.name()}
                             />

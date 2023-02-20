@@ -44,6 +44,7 @@ export class FieldDef {
     labelMode: string = "label placeholder";
     readonly?: boolean = false;
     updatable?: boolean;
+    sortable: boolean = false;
     required: boolean = false;
     visibility: Visibility = Visibility.ALL;
     validator?: Validator | Function; //called to validate a field if specified
@@ -113,10 +114,7 @@ export class FieldDef {
                 return this.type;
         }
     }
-    isRequired = (flag : boolean) => {
-        this.required = flag;
-        return this;
-    }
+
     useFormatter = (f: Formatter | Function | undefined) => {
         this.formatter = f;
         return this;
@@ -263,8 +261,7 @@ export interface FormFieldProp {
     def: FieldDef,
     entity: Entity,
     onInput: any,
-    options?: Function | Array<FormFieldOption>,
-    labelPosition?: string
+    options?: Function | Array<FormFieldOption>
 }
 export interface FormFieldState {
     value: any,
@@ -309,13 +306,11 @@ export class TextField extends PureComponent<FormFieldProp, FormFieldState>{
             <>
                 <Form.Group className="v-form-field" controlId={this.props.entity.id}>
                     {
-                        def.labelMode.includes("label") ? 
-                            <Form.Label className={`v-form-label${def.required ? ' v-required': ''}`}>{def.getLabel()}</Form.Label> 
-                            : ""
+                        def.labelMode.includes("label") ? <Form.Label className="v-form-label">{def.getLabel()}</Form.Label> : ""
                     }
                     {
                         <div className='v-input-container'>
-                            <Form.Control className={`v-input${def.required ? ' v-required': ''}`} type={def.getUIType()}
+                            <Form.Control className="v-input" type={def.getUIType()}
                                 value={this.state.value}
                                 onInput={this.onChange}
                                 placeholder={def.getPlaceHolder()}
@@ -470,7 +465,6 @@ export class SelectField extends PureComponent<FormFieldProp, FormFieldState>{
         this.props.onInput({ def: def, value: v, hasError: msg !== undefined, errorMsg: msg, ...evt });
     }
     getOptions = () => {
-        //this.setState({value:""});
         let options = this.props.options;
         if (options instanceof Function) {
             return options(this.props.entity);
@@ -486,12 +480,10 @@ export class SelectField extends PureComponent<FormFieldProp, FormFieldState>{
             options = [{
                 value: "",
                 label: StringUtils.t("noOptionsToSelectFrom")
-            }];
-            this.setState({value:""});
+            }]
         }
         if (options.length === 1) {
             value = options[0].value;
-            this.setState({value:value});
         }
         //console.log("render select field", this.props.entity, value, def.name, options);
         return (
@@ -513,17 +505,13 @@ interface FormProp {
     fieldDefs?: Function;
     onSubmit?: Function;
     onChange?: Function;
-    onCancel?: Function;
-    onSubmitClose? : Function;
     mode?: string;
-    labelPosition?: string,
     columns?: number,
     inline?: boolean;
 }
-
 interface FormPropState {
     hasError: boolean;
-    entity?: Entity,
+    entity: Entity,
     columns: number
 }
 export class EntityForm extends PureComponent<FormProp, FormPropState> {
@@ -536,12 +524,7 @@ export class EntityForm extends PureComponent<FormProp, FormPropState> {
         let entity = this.props.entity ? this.props.entity : EntityManager.emptyEntity()
         this.state = { hasError: false, entity: entity, columns: 1 };
     }
-    // componentDidUpdate(prevProps: Readonly<FormProp>, prevState: Readonly<FormPropState>, snapshot?: any): void {
-    //     if(this.props.entity?.id !== prevState.entity?.id) {
-    //         //console.log(this.props.entity, prevProps.entity);
-    //         //this.setState({entity:this.props.entity});
-    //     }
-    // }
+
     screenSizeListener = (evnt: any) => {
         let screenSize = window.innerWidth;
         console.debug(screenSize);
@@ -576,7 +559,7 @@ export class EntityForm extends PureComponent<FormProp, FormPropState> {
         entity[evt.def.name] = evt.value;
         this.setState({ entity: entity });
         if (entity && this.props.onChange) {
-            this.props.onChange(entity, this, evt.def);
+            this.props.onChange(entity, this);
         }
     }
 
@@ -666,12 +649,6 @@ export class EntityForm extends PureComponent<FormProp, FormPropState> {
                                 this.props.onSubmit ? <Button className={'v-button-' + mode}
                                     disabled={this.state.hasError} id="submit1" variant="primary" type="submit">
                                     {StringUtils.t(mode)}
-                                </Button> : ""
-                            }
-                            {
-                                this.props.onSubmitClose ? <Button className={'v-button-submit'}
-                                    disabled={this.state.hasError} id="submit1" variant="primary" type="submit">
-                                    {"Submit and Close"}
                                 </Button> : ""
                             }
                         </Form.Group>
@@ -873,27 +850,24 @@ export class EntityList extends Component<ListTableProp, ListTableState> {
                 <div className='v-container'>
                     {
                         entities.length > 0 ? this.viewMode === 'Table' ?
-                            <>
-                                
-                                <Table striped bordered hover>
-                                    <thead>
-                                        <tr>
-                                            {this.renderHeaders(entities[0])}
-                                            {hasActions ? <th>{StringUtils.t("actions")}</th> : ""}
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {
-                                            entities.map((entity, idx) =>
-                                                <tr key={idx}>
-                                                    {this.renderRow(entity, idx)}
-                                                    {this.renderActions(entity, idx)}
-                                                </tr>
-                                            )
-                                        }
-                                    </tbody>
-                                </Table>
-                            </>
+                            <Table striped bordered hover>
+                                <thead>
+                                    <tr>
+                                        {this.renderHeaders(entities[0])}
+                                        {hasActions ? <th>{StringUtils.t("actions")}</th> : ""}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        entities.map((entity, idx) =>
+                                            <tr key={idx}>
+                                                {this.renderRow(entity, idx)}
+                                                {this.renderActions(entity, idx)}
+                                            </tr>
+                                        )
+                                    }
+                                </tbody>
+                            </Table>
                             : <>
                                 {
                                     entities.map((entity, idx) =>

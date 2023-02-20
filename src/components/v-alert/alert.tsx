@@ -1,5 +1,8 @@
 import { PureComponent } from "react";
-import { Offcanvas } from "react-bootstrap";
+
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+
 import "./alert.css"
 
 type AlertViewerProps = {
@@ -7,35 +10,37 @@ type AlertViewerProps = {
     ttl?: number,
     text: string,
     level?: string,
-    show: boolean
+    show: boolean,
+    onClose?:Function
 }
 
 export class Alert extends PureComponent<AlertViewerProps, { show: boolean, timedout: boolean }> {
     constructor(props: AlertViewerProps) {
         super(props);
-        this.state = { show: this.props.show, timedout: false };
+        this.state = { timedout: false, show: false };
     }
-
-    componentDidUpdate(prevProps: Readonly<AlertViewerProps>, prevState: Readonly<{ show: boolean; }>, snapshot?: any): void {
-        if (this.props.show !== prevProps.show) {
-            this.setState({ show: true, timedout: false });
-            setTimeout(() => {
-                this.setState({ show: false });
-            }, this.props.ttl ? this.props.ttl : 10000);
+    componentDidUpdate(prevProps: Readonly<AlertViewerProps>, prevState: Readonly<{ show: boolean; timedout: boolean; }>, snapshot?: any): void {
+        if(this.props.show !== prevState.show) {
+            this.setState({show:this.props.show});
         }
     }
-
+    handleClose = () => {
+        this.setState ({show : false});
+        if(this.props.onClose) {
+            this.props.onClose()
+        }
+    }
     render = () => (
-        <Offcanvas className="v-alert" show={this.state.show} placement='end' onHide={() => {
-            this.setState({ show: false, timedout: false });
-        }}  >
-            <Offcanvas.Header closeButton>
-                <Offcanvas.Title>{this.props.title}</Offcanvas.Title>
-            </Offcanvas.Header>
-            <Offcanvas.Body>
-                {this.props.text}
-            </Offcanvas.Body>
-        </Offcanvas>
+        <Modal show={this.state.show} onHide={this.handleClose}>
+            <Modal.Header closeButton>
+                <Modal.Title>{this.props.title}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <p>{this.props.text}</p>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button onClick={this.handleClose} variant="secondary">Close</Button>
+            </Modal.Footer>
+        </Modal>
     )
-
 }

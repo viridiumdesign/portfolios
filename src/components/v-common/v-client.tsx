@@ -1,7 +1,7 @@
 import { securityManager } from "../v-security/v-security-manager";
 
 
-const host = "http://localhost:8080/viridium";
+const host = "/viridium";
 
 class RestClient {
     headers = (res : any) : any => {

@@ -78,7 +78,7 @@ export class Address extends BaseEntity {
     zipCode: string = "";
 }
 
-export class AddressManager extends EntityManager {
+export class AddressManager extends EntityManager<Address> {
     constructor() {
         super("Address");
     }
@@ -210,7 +210,7 @@ export class BusinessObjectForm extends PureComponent<BusinessObjectProps, Busin
 
     render = () => {
         return  <div id={this.props.id} className={`v-business-object v-${this.props.objectType.toLocaleLowerCase()}-form`} >
-            <EntityForm title={this.props.title ? 
+            <EntityForm inline={false}  title={this.props.title ? 
                 this.props.title : StringUtils.t(this.props.objectType)}
                 entity = {this.state.entity}
                 onChange={this.onChange} 

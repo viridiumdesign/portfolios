@@ -175,7 +175,8 @@ export class DataTable extends React.Component<DataTableProps, DataTableState> {
     }
 
     componentDidUpdate(prevProps: Readonly<DataTableProps>, prevState: Readonly<DataTableState>, snapshot?: any): void {
-        if (this.props.data.updatedAt !== prevProps.data.updatedAt || this.props.filters !== prevProps.filters) {
+        if (this.props.data.rows.length !== prevProps.data.rows.length
+            || this.props.filters !== prevProps.filters) {
             this.setState({ data: this.props.data, filters: this.props.filters });
         }
     }
@@ -197,31 +198,22 @@ export class DataTable extends React.Component<DataTableProps, DataTableState> {
         const row = parseInt(row_col[0]);
         const col = parseInt(row_col[1]);
         let newData = { ...this.state.data };
-        let cell = newData.rows[row].cols[col];
-        if (cell.type === "checkbox") {
-            cell.value = evt.target.checked;
-        } else {
-            cell.value = evt.target.value;
-        }
+        newData.rows[row].cols[col].value = evt.target.value;
         this.setState({ data: newData });
-        if (this.props.onDataChanged) {
-            this.props.onDataChanged(this.state.data, row, col, cell.value);
+        if (this.props.options?.onDataChanged) {
+            this.props.options.onDataChanged(this.state.data);
         }
         this.forceUpdate();
     }
 
     renderCell = (cellData: any, row: number, col: number) => {
         const id = `${row}.${col}`;
-        return cellData.type === 'checkbox' ?
-            <Form.Check id={id} checked={cellData.value} type="checkbox" onChange={this.onValueChange} />
-            : cellData.type === 'button' ?
-                <Button id={id} onClick={cellData.onClick} >{cellData.text}</Button>
-                : cellData.type === 'input' ?
-                    <Form.Control type="text" id={id} onChange={this.onValueChange} value={cellData.value} />
-                    : cellData.type === 'select' ?
-                        <Form.Select id={id} onChange={this.onValueChange} value={cellData.value || ''}>
-                            {cellData.options.map((o: any, idx: number) => <option key={'o' + idx} value={o.value}>{o.text}</option>)}
-                        </Form.Select> : cellData.text
+        return cellData.type === 'checkbox' ? <Form.Check id={id} checked={cellData.value} type="checkbox" onChange={this.onValueChange} />
+            : cellData.type === 'button' ? <Button id={id} onClick={cellData.onClick} >{cellData.text}</Button>
+                : cellData.type === 'input' ? <Form.Control type="text" id={id} onChange={this.onValueChange} value={cellData.value} />
+                    : cellData.type === 'select' ? <Form.Select id={id} onChange={this.onValueChange} value={cellData.value || ''}>
+                        {cellData.options.map((o: any, idx: number) => <option key={'o' + idx} value={o.value}>{o.text}</option>)}
+                    </Form.Select> : cellData.text
     }
 
     handleFilterUpdate = (value: Filter) => {
