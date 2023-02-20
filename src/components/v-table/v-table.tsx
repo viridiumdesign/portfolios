@@ -1,288 +1,154 @@
-import React from "react";
-import { Button, Form, Table } from "react-bootstrap";
-import { FormFieldOption } from "../v-entity/entity-form";
+import React, { PureComponent } from "react";
+import { Table } from "react-bootstrap";
+import { GrNext, GrPrevious } from "react-icons/gr";
+import { FieldDef } from "../v-entity/entity-form";
+import { StringUtils } from "../v-utils/v-string-utils";
 
 import "./v-table.css";
 
-interface DimensionViewProps {
-    data: Array<{ id: string, label: string }>,
-    options?: {
-        onSelectValue?: Function,
-        value?: any;
-        label?: string,
-        placeHolder?: string
-    }
-}
 
-interface DimensionViewState {
-    selected: string
-}
 
-export class DimensionView extends React.Component<DimensionViewProps, DimensionViewState> {
-    constructor(props: DimensionViewProps) {
+interface PaginatorProps {
+    onPage: Function;
+    total: number;
+    pageSize: number;
+    page?: number;
+    shown?: number;
+}
+interface PaginatorState {
+    start: number;
+    page: number;
+}
+export class Paginator extends PureComponent<PaginatorProps, PaginatorState> {
+    shown: number;
+    constructor(props: PaginatorProps) {
         super(props);
-        this.state = { selected: props.options?.value };
+        this.shown = props.shown ? props.shown : 10;
+        this.state = { start: 0, page: 0 };
     }
-
-    onSelectDim = (evt: any) => {
-        const options = this.props.options;
-        let v = this.props.data.find((v: any) => v.id === evt.target.value);
-        this.setState({ selected: evt.target.value });
-        if (options?.onSelectValue) {
-            options.onSelectValue(v);
-        }
-        evt.stopPropagation();
-    }
-    render = () => {
-        const options = this.props.options;
-        return (
-            <div className="v-dimension-container">
-                {
-                    options?.label ? <div className="v-dimension-title">{options.label}</div> : ""
-                }
-                <Form.Select className="dimension-select" value={this.state.selected} onChange={this.onSelectDim}>
-                    <option value="" >{options?.placeHolder} </option>
-                    {
-                        this.props.data.map((v: any, idx: number) => <option key={idx} value={v.id} >{v.label}</option>)
-                    }
-                </Form.Select>
-            </div>
-
-        );
-    }
-}
-interface TableFilterProps {
-    name: string,
-    value?: string,
-    options?: Array<FormFieldOption>,
-    onChange?: Function
-}
-interface TableFilterState {
-    value: string,
-}
-export interface Filter {
-    name: string,
-    value?: string,
-    options?: Array<FormFieldOption>,
-}
-interface FilterProps {
-    name: string,
-    value?: string,
-    options?: Array<FormFieldOption>,
-    onChange: Function
-}
-
-export class OptionFilter extends React.Component<FilterProps, TableFilterState> {
-    onChange = (v: any) => {
-        if (this.props.onChange) {
-            this.props.onChange(v)
-        }
-    }
-    render() {
-        let value = this.props.value;
-        let label = this.props.name;
-        return (
-            <Form.Group controlId={label}>
-                <Form.Label>{label}</Form.Label>
-                <Form.Select value={value} onInput={this.onChange}>
-                    {this.props.options!.map((opt: any, idx: number) => <option key={'opt' + idx} value={opt.value}>{opt.label}</option>)}
-                </Form.Select>
-            </Form.Group>
-        )
-    }
-}
-
-export class TextFilter extends React.Component<FilterProps, TableFilterState> {
-    onChange = (v: any) => {
-        if (this.props.onChange) {
-            this.props.onChange(v)
-        }
-    }
-    render() {
-        let value = this.props.value;
-        let label = this.props.name;
-        return (
-            <Form.Group controlId={label}>
-                <Form.Label>{label}</Form.Label>
-                <Form.Control placeholder={label} type="text" value={value} onInput={this.onChange} />
-            </Form.Group>
-        )
-    }
-}
-
-export class TableFilter extends React.Component<TableFilterProps, TableFilterState> {
-    constructor(props: TableFilterProps) {
-        super(props);
-        this.state = { value: props.value ? props.value : "" };
-    }
-    onChange = (evt: any) => {
-        let v = evt.target.value;
-        this.setState({ value: v });
-        if (this.props.onChange) {
-            this.props.onChange({ name: this.props.name, value: v });
+    onSelect = (page: number) => {
+        let start = this.shown * Math.floor(page / this.shown);
+        this.setState({ start: start, page: page });
+        if (this.props.onPage) {
+            this.props.onPage(page)
         }
     }
     render = () => {
-        return <span className="v-filter">
+        let pages = [];
+        let noOfPages = this.props.total / this.props.pageSize;
+        let hasMore = this.state.page < noOfPages;
+        let hasPrev = this.state.page > 0;
+        for (let i = this.state.start; i < this.state.start + Math.min(this.shown, noOfPages); i++) {
+            pages.push(i)
+        }
+        return <div className="v-paginator">
             {
-                this.props.options ? <OptionFilter value={this.state.value} name={this.props.name} options={this.props.options} onChange={this.onChange} />
-                    : <TextFilter value={this.state.value} name={this.props.name} onChange={this.onChange} />
+                <span className={`v-page-prev ${hasPrev ? 'v-visible' : 'v-invisible'}`} onClick={() => this.onSelect(this.state.page - 1)}>
+                    <GrPrevious /></span>
             }
-        </span>
-    }
-    static check = (f: Filter, headers: Array<any>, row: any): boolean => {
-        let idx = headers.findIndex((h) => h.text === f.name);
-        if (idx < 0 || row.cols[idx] === undefined || row.cols[idx].text === undefined) {
-            return false
-        }
-        else {
-            return row.cols[idx].text.includes(f.value);
-        }
+            {
+                pages.map((i) => {
+                    return <span onClick={() => this.onSelect(i)}
+                        className={`v-page-no${this.state.page === i ? " v-selected" : ""}`}
+                        key={"p-" + i} >{i}</span>
+                })
+            }
+            {
+                <span className={`v-page-next ${hasMore ? 'v-visible' : 'v-invisible'}`} onClick={() => this.onSelect(this.state.page + 1)}>
+                    <GrNext /></span>
+            }
+        </div>
     }
 }
-interface DataTableOptions {
-    onDataChanged?: Function,
-    show: number,
+interface ViridiumTableProps {
+    id?: string,
+    title: string
+    rows: Array<any>,
+    onDelete?: Function,
+    onSelect?: Function,
+    onEdit?: Function,
+    fieldDefs?: Function,
+    actions?: Array<any>,
+    showTitle?: boolean;
     pageSize?: number
 }
-interface DataTableProps {
-    data: any,
-    onSelectRow?: Function,
-    onDataChanged?: Function,
-    options?: DataTableOptions,
-    filters?: Array<Filter>,
-    columns?: Array<string>//visible cols
-}
-interface DataTableState {
-    data: any,
-    filters?: Array<Filter>
+interface ViridiumTableState {
+    selected?: any,
+    rows: Array<any>,
+    page: number
 }
 
-export class DataTable extends React.Component<DataTableProps, DataTableState> {
-    options?: DataTableOptions;
-    constructor(props: DataTableProps) {
+export class ViridiumTable extends React.Component<ViridiumTableProps, ViridiumTableState> {
+    id: string;
+    constructor(props: ViridiumTableProps) {
         super(props);
-        this.state = { data: props.data, filters: this.props.filters };
-    }
-    componentDidMount(): void {
-        this.setState({ data: this.props.data, filters: this.props.filters });
-    }
-
-    shouldComponentUpdate = (nextProps: DataTableProps, nextState: DataTableState, nextContext: any): boolean => {
-        if (this.state.data.rows.length !== nextProps.data.rows.length) {
-            this.setState({ data: nextProps.data, filters: nextProps.filters });
-            return true;
-        }
-        return false;
+        this.id = props.id ? props.id : StringUtils.guid();
+        this.state = { rows: props.rows, selected: undefined, page: 0 };
     }
 
     onSelectRow = (evt: any) => {
         evt.stopPropagation();
-        if (this.props.onSelectRow) {
-            let row = this.props.data.rows.find((d: any) => d.id === evt.currentTarget.id);
-            this.props.onSelectRow(evt.currentTarget.id, row, evt.currentTarget);
+        if (this.props.onSelect) {
+            let row = this.props.rows.find((d: any) => d.id === evt.currentTarget.id);
+            this.props.onSelect(evt.currentTarget.id, row, evt.currentTarget);
         }
     }
 
-    onRowChecked = (evt: any) => {
-        console.log(evt);
+    onSelectPage = (page: number) => {
+        this.setState({ page: page });
     }
 
-    onValueChange = (evt: any) => {
-        let row_col = evt.target.id.split(".");
-        const row = parseInt(row_col[0]);
-        const col = parseInt(row_col[1]);
-        let newData = { ...this.state.data };
-        newData.rows[row].cols[col].value = evt.target.value;
-        this.setState({ data: newData });
-        if (this.props.options?.onDataChanged) {
-            this.props.options.onDataChanged(this.state.data);
+    getFieldDefs = () => {
+        let fieldDefs = [];
+        if (this.props.fieldDefs) {
+            if (this.props.fieldDefs instanceof Array) {
+                fieldDefs = [...this.props.fieldDefs];
+            }
+            else {
+                fieldDefs = this.props.fieldDefs();
+            }
         }
-        this.forceUpdate();
-    }
-
-    renderCell = (cellData: any, row: number, col: number) => {
-        const id = `${row}.${col}`;
-        return cellData.type === 'checkbox' ? <Form.Check id={id} checked={cellData.value} type="checkbox" onChange={this.onValueChange} />
-            : cellData.type === 'button' ? <Button id={id} onClick={cellData.onClick} >{cellData.text}</Button>
-                : cellData.type === 'input' ? <Form.Control type="text" id={id} onChange={this.onValueChange} value={cellData.value} />
-                    : cellData.type === 'select' ? <Form.Select id={id} onChange={this.onValueChange} value={cellData.value || ''}>
-                        {cellData.options.map((o: any, idx: number) => <option key={'o' + idx} value={o.value}>{o.text}</option>)}
-                    </Form.Select> : cellData.text
-    }
-
-    handleFilterUpdate = (value: Filter) => {
-        let filters = [...this.state.filters ? this.state.filters : []];
-        filters = filters.filter((f) => f.name !== value.name);
-        filters.push(value);
-        this.setState({ filters: filters });
-        this.forceUpdate();
+        return fieldDefs;
     }
 
     render = () => {
-        let tableData = this.state.data;
+        let tableData = this.state.rows;
         if (!tableData) {
             return <div>No data available</div>
         }
-        let rowsToShow = tableData.rows;
-        let headers = [...tableData.headers];
-        if (this.state.filters) {
-            rowsToShow = tableData.rows.filter((row: any, idx: number) => {
-                let filtered = true;
-                this.state.filters?.forEach((f) => {
-                    filtered = filtered && TableFilter.check(f, tableData.headers, row);
-                })
-                return filtered;
-            });
-        }
-        rowsToShow = rowsToShow.slice(0, this.props.options?.pageSize ? this.props.options?.pageSize : 200);
+        let rowsToShow = tableData;
 
-        if(this.props.columns) {
-            let cIdx : Array<number> = [];
-            headers = headers.filter((h, idx:number) => {
-                let found = this.props.columns?.find((c) => c===h.text) !== undefined;
-                if (found) {
-                    cIdx.push(idx);
-                }
-                return found;
-            });
-            rowsToShow = rowsToShow.map((r : any) => {
-                return {
-                    id: r.id,
-                    cols: r.cols.filter((c : any, idx: number) => cIdx.includes(idx))
-                }
-            });
-        }
+        let pageSize = this.props.pageSize ? this.props.pageSize : 20;
 
+        let offset = this.state.page * pageSize
+        rowsToShow = rowsToShow.slice(offset, offset + pageSize);
+        let fieldDefs = this.getFieldDefs() as Array<FieldDef>;
         return (
-            <div className="v-table" >
-                {
-                    this.props.filters ? <div className="v-filters">
-                        {this.props.filters.map((filter: Filter, idx: number) =>
-                            <TableFilter key={'h' + idx} value={filter.value} options={filter.options} onChange={this.handleFilterUpdate} name={filter.name} />)}
-                    </div> : ""
-                }
+            <div className="v-table" id={this.id}>
                 <div className="v-table-container" >
                     <Table bordered hover size="sm">
                         <thead>
                             <tr >
                                 {
-                                    headers.map((col: any, idx: number) => {
-                                        return <th className={"data-cell-header"} key={'h' + idx}>{col.type === 'checkbox' ? <Form.Check type="checkbox" /> : col.text
-                                        }</th>
+                                    fieldDefs.map((def: any, idx: number) => {
+                                        return <th className={"v-table-header"} key={'h' + idx}>
+                                            <span dangerouslySetInnerHTML={{ __html: def.getLabel() }} />
+                                        </th>
                                     })
                                 }
                             </tr>
                         </thead>
                         <tbody>
                             {
-                                rowsToShow.map((row: any, idx: number) => {
-                                    return <tr key={'r' + idx} onClick={this.onSelectRow} id={row.id}>
+                                rowsToShow.map((entity: any, idx: number) => {
+                                    return <tr className={`v-table-row row-${idx % 2}`} key={'r' + idx}
+                                        onClick={this.onSelectRow} id={this.id + '-row-' + idx}>
                                         {
-                                            row.cols.map((col: any, jdx: number) => {
-                                                return <td className={"data-cell-" + col.type} key={'c' + jdx}>
+                                            fieldDefs.map((def: FieldDef, jdx: number) => {
+                                                return <td className={"v-table-cell v-cell-"
+                                                    + def.getUIType()} key={'c' + jdx}>
                                                     {
-                                                        this.renderCell(col, idx, jdx)
+                                                        def.getAttributeValue(entity)
                                                     }
                                                 </td>
                                             })
@@ -293,6 +159,10 @@ export class DataTable extends React.Component<DataTableProps, DataTableState> {
                         </tbody>
                     </Table>
                 </div>
+                {
+                    <Paginator total={this.props.rows.length} pageSize={pageSize} page={this.state.page}
+                        onPage={this.onSelectPage} />
+                }
             </div>
         );
     }

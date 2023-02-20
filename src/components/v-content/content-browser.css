@@ -1,0 +1,31 @@
+.v-content-browser {
+    --v-content-browser-bg:rgb(255, 255, 255);
+    --v-content-nav-bg:rgb(255, 255, 255);
+    --v-content-body-bg:rgb(255, 255, 255);
+    --v-content-nav-width:20%;
+    --v-content-body-width:80%;
+    background-color: var(--v-content-browser-bg);
+    display: flex;
+}
+
+.v-content-browser .v-content-nav{
+    background-color: var(--v-content-nav-bg);
+    width: var(--v-content-nav-width);
+    display: flex;
+}
+
+.v-content-browser .v-content-nav .v-nav-items {
+    width: 100%;
+    padding: 0.5rem 0rem;
+}
+
+.v-content-browser .v-content-body{
+    width: var(--v-content-body-width);
+    background-color: var(--v-content-bod-bg);
+}
+
+
+.v-content-browser  .v-content-body .v-content{ 
+    padding: 1rem;
+
+}

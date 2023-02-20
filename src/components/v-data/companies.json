@@ -1,19 +1,19 @@
 {
     "header": [
-        "No.",
-        "Symbol",
-        "Company Name",
-        "Market Cap",
-        "Stock Price",
-        "% Change",
-        "Revenue",
-        "Volume ",
-        "Industry",
-        "Sector",
-        "Rev. Growth",
-        "Net Income",
-        "FCF",
-        "Net Cash"
+        "seq",
+        "symbol",
+        "name",
+        "marketCap",
+        "stockPrice",
+        "changeInPercentage",
+        "revenue",
+        "volume ",
+        "industry",
+        "sector",
+        "revGrowth",
+        "netIncome",
+        "freeCashFlow",
+        "netCash"
     ],
     "rows": [
         [

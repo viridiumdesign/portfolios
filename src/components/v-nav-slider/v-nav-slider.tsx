@@ -35,7 +35,6 @@ export class NavSlider extends PureComponent<NavSliderProps, NavSliderState>{
 
     componentDidUpdate(prevProps: any) {
         if (this.props.value !== prevProps.value) {
-            console.log(this.props.value, prevProps.value);
             this.setState({ selected: this.props.value });
         }
     }

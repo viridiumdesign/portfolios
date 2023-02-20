@@ -33,7 +33,7 @@ export class SelectCompany extends Component<CompanyProps, CompanyState> {
     }
 
     getCompanies = (): Array<{ value: string, label: string }> => {
-        return metadataManager.getCompanies();
+        return metadataManager.getCompanies1();
     }
 
     render = () => {

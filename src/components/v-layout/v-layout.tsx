@@ -1,15 +1,16 @@
 
-import React, { Component, useEffect } from "react";
-import { Navbar, Nav, NavDropdown, ListGroup, Offcanvas } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Navbar, Nav, NavDropdown, Offcanvas } from "react-bootstrap";
 import { securityManager } from "../v-security/v-security-manager";
 import { useNavigate } from "react-router-dom";
 
-import { IMicroApp, IRouteItem, MicroApp } from "../v-common/v-app";
+import { IMicroApp, MicroApp } from "../v-common/v-app";
 import { VscMail } from "react-icons/vsc";
 
 import "./v-layout.css";
 import { clearCachedConfigs, getConfigs } from "../../config/v-config";
 import Badge from "@mui/material/Badge";
+import { StringUtils } from "../v-utils/v-string-utils";
 
 export const v_link = (path: string) => {
     return process.env.PUBLIC_URL + "/#" + path
@@ -42,15 +43,6 @@ export const Search = (props: any) => {
     )
 }
 
-const NavItem = (props: any) => {
-    const navigate = useNavigate();
-    let service = props.service;
-    return (
-        <ListGroup.Item as="li" action onClick={(e: any) => { navigate(`#/schema/${service.name}`, { replace: true }); }}>
-            <span><img className="nav-icon" src="../resources/green.png" alt="" /> {service.getLabel()}</span>
-        </ListGroup.Item>
-    )
-}
 
 export const ApplicationHeader = (props: { microApp: IMicroApp }) => {
     const navigate = useNavigate();
@@ -128,12 +120,14 @@ export const LayoutHeader = (props: any) => {
             }) : ""
     }
     const ui = () => (
-        <Navbar expand="lg">
+        <Navbar id={microApp.getName() + "-nav"} expand="lg">
             <Navbar.Brand href={v_link("/")}>
                 {props.brand !== undefined ? props.brand :
                     <>
-                        <img src="./resources/luckie.png" className="v-logo" alt={''} ></img>
-                        <span className="v-title-1" >Sarah</span><span className="v-title-2">Wang</span>
+                        {
+                            configs.icon ? <img src={configs.icon} className="v-logo" alt={configs.title} ></img> : ""
+                        }
+                        <span>{configs.title}</span>
                     </>
                 }
             </Navbar.Brand>
@@ -163,22 +157,55 @@ export const LayoutHeader = (props: any) => {
 export interface WrapperProps {
     children?: React.ReactNode
 }
-export interface BodyNavProps {
-    children?: React.ReactNode,
-    routeItems: IRouteItem[];
+
+
+export interface INavItem {
+    group?: string;
+    name: string,
+    label?: string,
+    icon?: string,
+    type?: string,
+    route: string
 }
 
-export class LayoutBodyNav extends Component<BodyNavProps> {
-    render() {
-        return (
-            <ListGroup as="ul" className="v-body-nav">
-                {
-                    this.props.routeItems
-                        .map((routeItem, idx) => <NavItem service={routeItem} key={"v-body-nav-" + idx}></NavItem>)
-                }
-            </ListGroup>
-        )
-    }
+export interface BodyNavProps {
+    children?: React.ReactNode,
+    routeItems: INavItem[];
+    onSelect?: Function,
+    selected?: INavItem
+}
+
+export const LayoutBodyNav = (props: BodyNavProps) => {
+    const [selected, setSelected] = useState<INavItem | undefined>(props.selected);
+    const navigate = useNavigate();
+    useEffect(() => {
+        //console.log("useEffect is called", props);
+        if (selected === undefined && props.selected) {
+            setSelected(props.selected);
+        }
+    });
+    const onClick = (item: INavItem) => {
+        setSelected({ ...item });
+        if (props.onSelect) {
+            props.onSelect(item);
+        } else {
+            navigate(`${item.route}`, { replace: true });
+        }
+    };
+    //console.log("Render result", selected);
+    return (
+        <div className="v-nav-items">
+            {
+                props.routeItems.map((item, idx) => {
+                    let cName = "v-nav-item" + (item.name === selected?.name ? " selected" : "");
+                    return <div key={item.name} className={cName}
+                        onClick={(e: any) => { onClick(item) }}>
+                        {item.label ? item.label : StringUtils.t(item.name)}
+                    </div>
+                })
+            }
+        </div>
+    )
 }
 
 export const LayoutFooter = (props: { microApp?: IMicroApp, children: any }) => {
@@ -200,6 +227,7 @@ export const LayoutPage = (props: { microApp: IMicroApp, children: any, header?:
             navigate(`/login?from=/${props.microApp.getName()}`);
         }
     });
+
     const ui = () => {
         let main = props.children;
         let footer = undefined;
@@ -216,7 +244,6 @@ export const LayoutPage = (props: { microApp: IMicroApp, children: any, header?:
                         <LayoutHeader brand={brand} microApp={microApp} />
                         {props.header ? <ApplicationHeader microApp={microApp} /> : ""}
                         <div className={'v-page-body'}>
-                            {microApp.getNavItems().length > 0 ? <LayoutBodyNav routeItems={microApp.getNavItems()} /> : ""}
                             {main}
                         </div>
                         <LayoutFooter>

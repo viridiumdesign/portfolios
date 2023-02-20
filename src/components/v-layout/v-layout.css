@@ -7,13 +7,16 @@
     --v-layout-footer-color: rgb(144, 144, 144);
     --v-app-header-bg:rgb(245, 245, 245);
     --v-notifications-bg:rgba(255, 0, 0, 0.802);
+    --v-nav-item-padding: 0.8em 1.2em;
+    --v-nav-item-bg:rgba(255, 255, 255, 0.802);
+    --v-nav-item-hover-bg:rgba(237, 237, 237, 0.802);
+    --v-nav-item-selected-bg:var( --v-nav-item-hover-bg);
 }
 
 .v-panel-header {
     display: flex;
     padding: .5em 1em;
     align-items: center;
-    background-color: rgb(214, 214, 214);
     border-radius: 5px 5px 0px 0px;
 }
 
@@ -45,8 +48,18 @@
     height: calc(100vh - 110px);
 }
 
-.v-layout .v-body-nav a {
-    text-decoration: none;
+.v-layout .v-nav-item {
+    padding: var(--v-nav-item-padding);
+    cursor: default;
+    background-color: var(--v-nav-item-bg);
+}
+
+.v-layout .v-nav-item.selected {
+    background-color: var(--v-nav-item-selected-bg);
+}
+
+.v-layout .v-nav-item:hover {
+    background-color: var(--v-nav-item-hover-bg);;
 }
 
 .v-layout .v-body-main {

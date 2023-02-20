@@ -14,6 +14,9 @@ export class DataService {
         this.namespace = namespace;
         this.seedPath = seed;
     }
+    getCompanies = (): Array<{ value: string, label: string }> => {
+        return metadataManager.getCompanies1();
+    }
     getDB = (): any => {
         let db = localCache.get(this.namespace);
         if (db === undefined) {

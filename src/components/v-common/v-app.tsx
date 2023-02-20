@@ -1,8 +1,7 @@
-import { StringUtils } from '../v-utils/v-string-utils';
-
+import { StringUtils } from "../v-utils/v-string-utils";
+import "./v-app.css"
 export interface IMicroApp {
     getRouteItems(): IRouteItem[];
-    getNavItems(): IRouteItem[];
     getRoutes(): any;
     getName(): string;
     getPageClass(): string;
@@ -12,23 +11,49 @@ export interface IMicroApp {
     isSecure(): boolean;
 }
 
+export class EventManager {
+    handlers : Map<string, Array<Function>> = new Map();
+    publish = (eventName : string, event:{}) => {
+        if (this.handlers.get(eventName)) {
+            this.handlers.get(eventName)?.forEach(s => s(event));
+        }
+        
+    }
+    subscribe = (eventName : string, handler: Function) => {
+        let subscribers =  this.handlers.get(eventName);
+        if (!subscribers) {
+            subscribers = new Array<Function>();
+            this.handlers.set(eventName, subscribers);
+        }
+        subscribers.push(handler);
+    }
+    unsubscribe = (eventName: string, handler : any) => {
+        let subscribers =  this.handlers.get(eventName);
+        if ( subscribers) 
+        {
+            subscribers.filter(s => s === handler);
+        }
+    }
+}
+
+export const eventManager = new EventManager();
+
+
 export abstract class MicroApp implements IMicroApp {
 
     getRoutes() {
-        throw new Error('Method not implemented.');
+        throw new Error("Method not implemented.");
     }
     getRouteItems(): IRouteItem[] {
         return [];
     }
-    getNavItems(): IRouteItem[] {
-        return []
-    }
+
  
     getIcon(): string {
         return ""
     }
     getName(): string {
-        throw new Error('Method not implemented.');
+        throw new Error("Method not implemented.");
     }
     getTitle(): string {
         return this.getName();
@@ -71,7 +96,7 @@ export interface TitleProp {
 }
 
 export class RouteItem implements IRouteItem {
-    name: string = '';
+    name: string = "";
     label: Function | string | undefined = undefined;
     group?: string;
     icon?: string;

@@ -68,6 +68,7 @@ const db = new DataService();
 export const getDB = db.getDB;
 
 export class EntityManager {
+ 
     entityName: string;
     db: any;
     constructor(name: string) {
@@ -266,7 +267,7 @@ export class MetaDataManager extends EntityManager {
         return getDB()["zipCode"];
     }
 
-    getCompanies = () => {
+    getCompanies1 = () => {
         let companies = getDB()["companies"];
         return companies.rows.map((r: any) => {
             return {
@@ -275,6 +276,14 @@ export class MetaDataManager extends EntityManager {
             }
         })
     }
+    
+    getCompanies = () => {
+        let companies = getDB()["companies"];
+        return companies.rows.map((r: any) => {
+            return this.rowToCompany(r);
+        })
+    }
+
     rowToCompany = (cols: any) => {
         return {
             seq: cols[0],
@@ -293,6 +302,7 @@ export class MetaDataManager extends EntityManager {
             netCash: cols[13]
         }
     }
+
     getCompany = (symbol: string) => {
         let db = getDB();
         let companies = db["companies"];

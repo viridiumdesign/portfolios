@@ -1,0 +1,152 @@
+.v-divider-y {
+  height: 0.3em;
+  background-color: var(--v-dividier-bg);
+}
+
+.v-shadow {
+  box-shadow: 1em 1em 1em rgb(187, 187, 187, 0.6);
+}
+
+.v-form {
+  padding: 1rem;
+}
+
+.v-message {
+  min-height: 100px;
+  font-size: 2rem;
+  color: rgb(158, 193, 172);
+  padding: 2rem;
+  background-color: rgb(239, 239, 239);
+  margin-top: 4px;
+}
+
+.v-message-verbose {
+  background-color: blanchedalmond;
+  color: rgb(77, 77, 77);
+  font-size: small;
+  padding-left: .2em;
+  margin-top: 4px;
+}
+
+.v-message-info {
+  background-color: rgb(242, 242, 242);
+  color: #141b14;
+  font-size: small;
+  padding-left: .2em;
+  margin-top: 4px;
+}
+
+.v-message-warning {
+  background-color: blanchedalmond;
+  color: rgb(39, 39, 39);
+  font-size: small;
+  padding-left: .2em;
+  margin-top: 4px;
+}
+
+.v-message-error {
+  background-color: rgb(241, 241, 241);
+  color: red;
+  font-size: small;
+  padding-left: .2em;
+  margin-top: 4px;
+}
+
+.v-container {
+  max-width: 100%;
+
+}
+
+.table {
+  line-height: 2em;
+}
+
+.v-header {
+  font-size: calc(10px + 2vmin);
+  background-color: rgb(212, 212, 212);
+  border-radius: 12px 12px 0px 0px;
+  padding: 4px 12px;
+}
+
+.v-body {
+  color: rgb(55, 55, 55);
+  padding: 1em;
+  background-color: rgb(242, 242, 242);
+}
+
+.v-link {
+  color: #0042A5;
+  text-decoration: none;
+  margin: 0.5em;
+  cursor: pointer;
+}
+
+.v-footer {
+  padding: 1rem;
+  color: rgb(55, 55, 55);
+  background-color: rgb(238, 238, 238);
+}
+
+.v-title {
+  padding: 4px 12px;
+  font-size: larger;
+  font-weight: 600;
+  color: rgb(93, 93, 93);
+  background-color: rgb(240, 240, 240);
+  border-radius: 4px;
+}
+
+.v-list {
+  padding: 0px 0px;
+}
+
+.v-list-header {
+  padding: 8px 8px;
+  font-size: large;
+  background-color: aliceblue;
+}
+
+.v-list-body {
+  padding: 12px 2px;
+}
+
+.v-list-item {
+  padding: 0.8em;
+  cursor: pointer;
+  color: rgb(59, 59, 59);
+  background-color: white;
+  border-bottom: solid 1px rgb(228, 228, 228);
+}
+
+.v-actions {
+  text-align: right;
+  font-size: large;
+}
+
+.v-buttons {
+  padding: .5rem;
+}
+
+.v-button {
+  cursor: pointer;
+  border: 1px white solid;
+  border-radius: 18px;
+  text-align: center;
+  padding: 0.5em 1.5em;
+}
+
+.v-field-label {
+  padding: 0.6em 1rem;
+  color: rgb(83, 83, 83);
+  background-color: rgb(244, 244, 244);
+}
+
+.v-field-value {
+  padding: 0.6em 1rem;
+  color: rgb(62, 62, 62);
+}
+
+.v-text-body {
+  line-height: 1.8em;
+  padding: 1em;
+}

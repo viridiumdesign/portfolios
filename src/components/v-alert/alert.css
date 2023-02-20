@@ -1,0 +1,5 @@
+.v-alert.offcanvas {
+    overflow-y: scroll;
+    height: 200px;
+}
+
